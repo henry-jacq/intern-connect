@@ -68,21 +68,33 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="offer-letter">Upload Offer Letter (PDF):</label>
+                <input type="file" id="offer-letter" name="offer-letter" accept=".pdf">
+                <p id="selected-file"></p>
+            </div>
+
+            <div class="form-group">
                 <button type="submit">Submit</button>
             </div>
         </form>
     </div>
 
     <script >
-        document.addEventListener("DOMContentLoaded", function () {
-    const stipendYesRadio = document.getElementById("stipend-yes");
-    const stipendAmountGroup = document.getElementById("stipend-amount-group");
-
-    stipendYesRadio.addEventListener("change", function () {
-        stipendAmountGroup.style.display = stipendYesRadio.checked ? "block" : "none";
+    document.addEventListener("DOMContentLoaded", function () {
+        const stipendYesRadio = document.getElementById("stipend-yes");
+        const stipendAmountGroup = document.getElementById("stipend-amount-group");
+        const offerLetterInput = document.getElementById("offer-letter");
+        const selectedFileText = document.getElementById("selected-file");
+    
+        stipendYesRadio.addEventListener("change", function () {
+            stipendAmountGroup.style.display = stipendYesRadio.checked ? "block" : "none";
+        });
+    
+        offerLetterInput.addEventListener("change", function () {
+            const fileName = offerLetterInput.files[0]?.name || "No file selected";
+            selectedFileText.textContent = `Selected File: ${fileName}`;
+        });
     });
-});
-
     </script>
 </body>
 </html>
