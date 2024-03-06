@@ -36,7 +36,7 @@
                             <a class="nav-link active" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside"
                                 aria-expanded="false">
                                 <img class="img-fluid border border-prime border-2 rounded-circle"
-                                    src="https://avatars.githubusercontent.com/u/98681" width="38" height="38">
+                                    src="https://avatars.githubusercontent.com/u/162424612" width="38" height="38">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-chevron-down" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"
@@ -56,14 +56,31 @@
         </nav>
     </div>
 
-    <div class="container px-sm-5">
+    <div class="container px-sm-5 py-3 mb-5">
         <h3 class="fw-normal fs-4 mt-5">Apply OD</h3>
         <hr class="m-0">
-        <form class="form-control border-0 p-0 mt-3 mb-5">
+        <form class="form-control mt-3">
             <div class="mb-3">
-                <label for="duration" class="form-label">Duration</label>
-                <input type="text" class="form-control" id="duration">
+                <label for="duration" class="form-label">Duration (In Days):</label>
+                <input type="text" class="form-control" id="duration" required>
             </div>
+            <div class="mb-3">
+                <label for="odDaysRequired" class="form-label">No. of days required for OD:</label>
+                <input type="text" class="form-control" id="odDaysRequired" required>
+            </div>
+            <div class="mb-3">
+                <label for="odDates" class="form-label">OD required dates:</label>
+                <input type="text" class="form-control" id="odDates" placeholder="MM/DD/YYYY - MM/DD/YYYY" required>
+            </div>
+            <div class="mb-3">
+                <label for="odDetails" class="form-label">OD Details:</label>
+                <textarea class="form-control" id="odDetails" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="currentCGPA" class="form-label">Current CGPA:</label>
+                <input type="text" class="form-control" id="currentCGPA" required>
+            </div>
+            <button class="btn btn-primary">Apply OD</button>
         </form>
     </div>
 
