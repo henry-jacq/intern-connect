@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OD Application</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.internship-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.internship-table th, .internship-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.internship-table th {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Style for hiding/showing forms */
+#odApplicationForm {
+    display: none;
+}
+
+label, input, textarea {
+    display: block;
+    margin-top: 10px;
+    color: #555;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>On-Demand (OD) Application</h1>
+
+        <!-- Internship Details Table -->
+        <table class="internship-table">
+            <thead>
+                <tr>
+                    <th>Internship ID</th>
+                    <th>Name of Organisation</th>
+                    <th>Mode of Internship</th>
+                    <th>Select Internship</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Populate this table with the available internships dynamically -->
+                <tr data-internship="internship1">
+                    <td>001</td>
+                    <td>Company A</td>
+                    <td>On-site</td>
+                    <td><button onclick="selectInternship('internship1')">Select</button></td>
+                </tr>
+                <tr data-internship="internship2">
+                    <td>002</td>
+                    <td>Company B</td>
+                    <td>Remote</td>
+                    <td><button onclick="selectInternship('internship2')">Select</button></td>
+                </tr>
+                <!-- Add more internship options as needed -->
+            </tbody>
+        </table>
+
+        <!-- OD Application Form (Initially Hidden) -->
+        <form id="odApplicationForm" style="display: none;">
+            
+            <h2>OD Application Form</h2>
+
+            <label for="odDuration">Duration of OD (in days):</label>
+            <input type="number" id="odDuration" name="odDuration" required>
+
+            <label for="odDaysRequired">Number of Days of OD Required:</label>
+            <input type="number" id="odDaysRequired" name="odDaysRequired" required>
+
+            <label for="odDates">Dates of OD Required:</label>
+            <input type="text" id="odDates" name="odDates" placeholder="E.g., MM/DD/YYYY - MM/DD/YYYY" required>
+
+            <label for="odDetails">Details of Other ODs Availed During Semester:</label>
+            <textarea id="odDetails" name="odDetails" rows="4" required></textarea>
+
+            <label for="currentCGPA">Current CGPA:</label>
+            <input type="number" step="0.01" id="currentCGPA" name="currentCGPA" required>
+
+            <button type="submit">Submit OD Application</button>
+
+        </form>
+
+    </div>
+
+    <script>
+        function selectInternship(internshipId) {
+            // Display the OD Application Form when the user selects an internship
+            document.getElementById("internshipSelectionForm").style.display = "none";
+            document.getElementById("odApplicationForm").style.display = "block";
+
+            // Additional logic to handle the selected internship (if needed)
+            console.log("Selected Internship ID: " + internshipId);
+        }
+    </script>
+
+</body>
+</html>
