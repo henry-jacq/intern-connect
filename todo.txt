@@ -1,0 +1,5 @@
+install flask
+
+install sqlalchemy
+install mysql
+install mysql-connector

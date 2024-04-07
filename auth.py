@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, redirect, url_for, flash
 import json
 from .models import Admin
+
+
 auth=Blueprint('auth',__name__)
 
 @auth.route('/login')
