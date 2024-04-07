@@ -6,7 +6,7 @@ db = SQLAlchemy()
 def create_app():
     app=Flask(__name__)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:hari@local@localhost/internship'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:hari@local@localhost/internship'
     # Other configuration settings...
 
     # Initialize extensions
