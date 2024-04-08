@@ -8,3 +8,4 @@ install cryptography
 install pandas
 install openpyxl
 
+run create_db.py once to create database 
