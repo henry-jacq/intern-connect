@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask import Blueprint,Flask, render_template, request, redirect, url_for, session,flash
-from __init__ import db
+from . import db
 
 
 class Admin:
