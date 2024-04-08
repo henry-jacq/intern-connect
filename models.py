@@ -32,3 +32,13 @@ class Internship(db.Model):
     remarks = db.Column(db.Text)
     offer_letter_path = db.Column(db.String(255))
     completion_certificate_path = db.Column(db.String(255))
+
+class ODApplication(db.Model):
+    __tablename__ = 'od_applications'
+
+    id = db.Column(db.Integer, primary_key=True)
+    duration = db.Column(db.Integer)
+    od_days_required = db.Column(db.Integer)
+    od_dates = db.Column(db.String(100))
+    od_details = db.Column(db.String(255))
+    current_cgpa = db.Column(db.Float)

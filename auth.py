@@ -4,9 +4,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, redirect, url_for, flash
 import json
 from .models import Admin
+from . import db
+from .models import ODApplication
 
 
 auth=Blueprint('auth',__name__)
+
+@auth.route('/')
+def index():
+    return render_template('index.html')
 
 @auth.route('/login')
 def login():
@@ -60,3 +66,20 @@ def admin_login():
 
     else:
         return render_template("admin/admin_login.html")
+
+@auth.route('/apply_od', methods=['POST'])
+def apply_od():
+    duration = request.form['duration']
+    od_days_required = request.form['odDaysRequired']
+    od_dates = request.form['odDates']
+    od_details = request.form['odDetails']
+    current_cgpa = request.form['currentCGPA']
+    
+    # Create a new OD application object and save it to the database
+    od_application = ODApplication(id=id,duration=duration, od_days_required=od_days_required, od_dates=od_dates, 
+                                   od_details=od_details, current_cgpa=current_cgpa)
+    db.session.add(od_application)
+    db.session.commit()
+    
+    # Redirect to the index page after form submission
+    return redirect(url_for('auth.index'))
