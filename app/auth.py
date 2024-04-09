@@ -1,11 +1,11 @@
 from flask import Blueprint,Flask, render_template, request, redirect, url_for, session,flash
+import json
 from pathlib import Path
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, redirect, url_for, flash
-import json
+from .extensions import db
 from .models import Admin
-from .. import db
-from models import ODApplication
+from .models import ODApplication
 
 
 auth=Blueprint('auth',__name__)

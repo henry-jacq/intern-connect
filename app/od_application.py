@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from . import db
-from .app.models import Internship
+from .extensions import db
+from .models import Internship
 od_application = Blueprint('od_application', __name__)
 
 @od_application.route('/apply_od2', methods=['POST'])
