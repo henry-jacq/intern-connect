@@ -1,12 +1,12 @@
 from flask import Flask,Blueprint
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
-from  models import Internship
+from  app.models import Internship
 from  __init__ import db
 app = Flask(__name__)
 
 # Load configuration for SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:hari@local@localhost/internship'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://henry:victus@henry007@localhost/internconnect'
 app.config['SECRET_KEY'] = 'hhh123'
 
 # Initialize SQLAlchemy extension
@@ -15,15 +15,11 @@ db.init_app(app)
 
 # Function to upload internship data from Excel sheet to database
 def upload_internship_data(excel_file):
-    with app.app_context():  # Ensure that we're within the application context
-            
+    with app.app_context():            
         try:
-            # Read data from Excel sheet into a DataFrame
             df = pd.read_excel(excel_file)
 
-            # Iterate over rows of the DataFrame
             for index, row in df.iterrows():
-                # Extract internship details from the current row
                 digital_id = row['Digital ID']
                 organization_name = row['Name of Organisation']
                 organization_address = row['Address of Organisation']
@@ -41,10 +37,8 @@ def upload_internship_data(excel_file):
                 stipend = True if row['Stipend'] == 'Yes' else False
                 stipend_amount = row['Stipend Amount'] if stipend else None
                 remarks = row['Remarks']
-                offer_letter_path = row['Offer Letter']  # Assuming file path or binary data
-                completion_certificate_path = row['Completion Certificate']  # Assuming file path or binary data
-
-                # Create an instance of Internship model with the extracted details
+                offer_letter_path = row['Offer Letter']
+                completion_certificate_path = row['Completion Certificate']
                 internship = Internship(
                     digital_id=digital_id,
                     organization_name=organization_name,
@@ -84,6 +78,6 @@ def upload_internship_data(excel_file):
 
 if __name__ == '__main__':
     # Example usage
-    excel_file_path = 'internconnect\internship_data.xlsx'
+    excel_file_path = 'internship_data.xlsx'
     success, message = upload_internship_data(excel_file_path)
     print(message)
