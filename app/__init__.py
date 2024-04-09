@@ -15,6 +15,8 @@ def create_app():
     db_host = os.getenv('DB_HOST')
 
     app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{user}:{passwd}@{db_host}/{db_name}"
+    
+    app.template_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
 
     # Initialize extensions
     db.init_app(app)
