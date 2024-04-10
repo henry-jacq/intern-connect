@@ -6,7 +6,8 @@ from flask import render_template, request, redirect, url_for, flash
 from .extensions import db
 from .models import Admin
 from .models import ODApplication
-
+import pymysql
+import os
 
 auth=Blueprint('auth',__name__)
 
@@ -42,30 +43,80 @@ def load_admin_data():
 @auth.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     global adminlist
-    adminlist = load_admin_data()
+    #adminlist = load_admin_data()
 
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
-
+        user=os.getenv("ADMIN_USER")
+        passwd=os.getenv("ADMIN_PASSWORD")
         hash_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
 
-        for admin in adminlist:
-            if admin.username == username:
-                if admin.password == password:
-                    flash("Login successful.")
-                    session['admin_username'] = admin.username
-                    session['admin_password'] = admin.password
-                    return redirect(url_for('auth.admin_dashboard'))
-                else:
-                    flash("Invalid credentials. Please try again.")
-                    return render_template("admin/admin_login.html")
+        
+        if user == username:
+            if passwd == password:
+                flash("Login successful.")
+                session['admin_username'] = user
+                session['admin_password'] = passwd
+                return redirect(url_for('auth.admin_dashboard'))
+            else:
+                flash("Invalid credentials. Please try again.")
+                return render_template("admin/admin_login.html")
         
         flash('You are not a recognized admin user')
         return redirect(url_for('auth.login'))
 
     else:
         return render_template("admin/admin_login.html")
+
+
+@auth.route('/admin_dashboard', methods=['GET', 'POST'])
+def admin_dashboard():
+         
+    # Connect to MySQL database
+    connection = pymysql.connect(
+        host='localhost',
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASS'),
+        database='internship',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    try:
+        with connection.cursor() as cursor:
+            # Total Internships Query
+            total_internships_query = "SELECT COUNT(*) AS total_internships FROM internships"
+            cursor.execute(total_internships_query)
+            total_internships_result = cursor.fetchone()
+            total_internships = total_internships_result['total_internships']
+            
+            # Total Students Query
+            total_students_query = "SELECT COUNT(*) AS total_students FROM internships"
+            cursor.execute(total_students_query)
+            total_students_result = cursor.fetchone()
+            total_students = total_students_result['total_students']
+            
+            # Active Internships Query
+            active_internships_query = "SELECT COUNT(*) AS active_internships FROM internships WHERE internship_status = 'Active'"
+            cursor.execute(active_internships_query)
+            active_internships_result = cursor.fetchone()
+            active_internships = active_internships_result['active_internships']
+            
+            # Completed Internships Query
+            completed_internships_query = "SELECT COUNT(*) AS completed_internships FROM internships WHERE internship_status = 'Completed'"
+            cursor.execute(completed_internships_query)
+            completed_internships_result = cursor.fetchone()
+            completed_internships = completed_internships_result['completed_internships']
+            
+    finally:
+        # Close the connection
+        connection.close()
+
+    
+    return render_template('admin/dashboard/index.html', total_internships=total_internships, 
+                           total_students=total_students, active_internships=active_internships, 
+                           completed_internships=completed_internships)
+
 
 @auth.route('/apply_od', methods=['POST'])
 def apply_od():

@@ -9,7 +9,7 @@ def create_app():
     app = Flask(__name__)
 
     user = os.getenv('DB_USER')
-    passwd = os.getenv('DB_USER')
+    passwd = os.getenv('DB_PASS')
     db_name = os.getenv('DB_NAME')
     db_host = os.getenv('DB_HOST')
 
@@ -22,6 +22,6 @@ def create_app():
 
     app.config['SECRET_KEY'] = 'hhh123'
 
-    app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
     return app
