@@ -9,26 +9,38 @@ class Admin:
 class Internship(db.Model):
     __tablename__ = 'internships'
 
-    digital_id = db.Column(db.String(50), primary_key=True)
-    internship_id = db.Column(db.Integer, unique=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    digital_id = db.Column(db.String(50))
     organization_name = db.Column(db.String(255), nullable=False)
-    organization_address = db.Column(db.Text, nullable=False)
+    organization_address = db.Column(db.String(255), nullable=False)
     organization_website = db.Column(db.String(255))
     nature_of_work = db.Column(db.Text)
-    reporting_authority_name = db.Column(db.String(255))
-    reporting_authority_designation = db.Column(db.String(100))
-    reporting_authority_email = db.Column(db.String(255))
-    reporting_authority_mobile = db.Column(db.String(20))
+    reporting_authority = db.Column(db.String(255))
     start_date = db.Column(db.Date, nullable=False)
     completion_date = db.Column(db.Date, nullable=False)
     duration = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(20), nullable=False)
+    ppo = db.Column(db.String(16), nullable=False)
     mode_of_internship = db.Column(db.String(20), nullable=False)
-    stipend = db.Column(db.Boolean, nullable=False)
-    stipend_amount = db.Column(db.Float)
+    stipend = db.Column(db.String(8), nullable=False)
+    stipend_amount = db.Column(db.String(8))
     remarks = db.Column(db.Text)
     offer_letter_path = db.Column(db.String(255))
     completion_certificate_path = db.Column(db.String(255))
+
+    def __repr__(self):
+        return f"Internship(id={self.id}, digital_id={self.digital_id}, organization_name={self.organization_name})"
+
+    @classmethod
+    def create(cls, **kwargs):
+        internship = cls(**kwargs)
+        db.session.add(internship)
+        db.session.commit()
+        return internship
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
 
 class ODApplication(db.Model):
     __tablename__ = 'od_applications'

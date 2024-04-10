@@ -3,8 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from .auth import auth
 from .views import views
 import os
-
-db = SQLAlchemy()
+from .extensions import db
 
 def create_app():
     app = Flask(__name__)
