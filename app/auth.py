@@ -113,7 +113,7 @@ def admin_dashboard():
         connection.close()
 
     
-    return render_template('admin/dashboard/index.html', total_internships=total_internships, 
+    return render_template('admin/admin_dash.html', total_internships=total_internships, 
                            total_students=total_students, active_internships=active_internships, 
                            completed_internships=completed_internships)
 

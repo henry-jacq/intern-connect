@@ -13,6 +13,7 @@ def create_app():
     db_name = os.getenv('DB_NAME')
     db_host = os.getenv('DB_HOST')
 
+    app.static_url_path=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
     app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{user}:{passwd}@{db_host}/{db_name}"
     
     app.template_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
