@@ -27,7 +27,7 @@ class Internship(db.Model):
     completion_letter = db.Column(db.String(255))
 
     def __repr__(self):
-        return f"Internship(id={self.id}, digital_id={self.digital_id}, organization_name={self.organization_name})"
+        return f"Internship(id={self.id}, digital_id={self.digital_id}, organization_name={self.org_name})"
 
     @classmethod
     def create(cls, **kwargs):
