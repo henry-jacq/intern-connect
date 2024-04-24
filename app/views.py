@@ -26,8 +26,7 @@ def intern_add():
         endDate = datetime.strptime(request.form['end_date'], '%Y-%m-%d')  # Parse end date
         internMode = request.form['intern_mode']
         stipend = request.form['stipend']
-        # stipendAmount = request.form['stipend_amount']
-        stipendAmount = None
+        stipendAmount = request.form.get('stipend_amount', None)
         ppo = request.form['ppo']
         # offerLetter = request.form['offer_letter']
         internStatus = request.form['intern_status']
@@ -52,13 +51,9 @@ def intern_add():
         db.session.add(internship)
         db.session.commit()
         
-        return redirect(url_for('views.success'))
+        return render_template('add_intern.html', msg=True)
 
-    return render_template('add_intern.html', msg=None)
-
-@views.route('/internship/add')
-def success():
-    return render_template('add_intern.html', msg="Internship added!")
+    return render_template('add_intern.html', msg=False)
 
 @views.route('/od/apply')
 def apply_od():
