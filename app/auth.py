@@ -1,4 +1,4 @@
-from flask import Blueprint,Flask, render_template, request, redirect, url_for, session,flash
+from flask import Blueprint,Flask, jsonify, render_template, request, redirect, url_for, session,flash
 import json
 from pathlib import Path
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -108,6 +108,11 @@ def admin_dashboard():
             completed_internships_result = cursor.fetchone()
             completed_internships = completed_internships_result['completed_internships']
             
+            # Pending Internships Query
+            pending_internships_query = "SELECT COUNT(*) AS pending_internships FROM internships WHERE internship_status = 'Pending'"
+            cursor.execute(pending_internships_query)
+            pending_internships_result = cursor.fetchone()
+            pending_internships = pending_internships_result['pending_internships']
     finally:
         # Close the connection
         connection.close()
@@ -115,8 +120,115 @@ def admin_dashboard():
     
     return render_template('admin/admin_dash.html', total_internships=total_internships, 
                            total_students=total_students, active_internships=active_internships, 
-                           completed_internships=completed_internships)
+                           completed_internships=completed_internships,pending_internships=pending_internships)
 
+def get_internship_data():
+    # Code to fetch internship data from your database
+    # Connect to MySQL database
+    connection = pymysql.connect(
+        host='localhost',
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASS'),
+        database='internship',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    try:
+        with connection.cursor() as cursor:
+            # Total Internships Query
+            total_internships_query = "SELECT COUNT(*) AS total_internships FROM internships"
+            cursor.execute(total_internships_query)
+            total_internships_result = cursor.fetchone()
+            total_internships = total_internships_result['total_internships']
+            
+            # Total Students Query
+            total_students_query = "SELECT COUNT(*) AS total_students FROM internships"
+            cursor.execute(total_students_query)
+            total_students_result = cursor.fetchone()
+            total_students = total_students_result['total_students']
+            
+            # Active Internships Query
+            active_internships_query = "SELECT COUNT(*) AS active_internships FROM internships WHERE internship_status = 'Active'"
+            cursor.execute(active_internships_query)
+            active_internships_result = cursor.fetchone()
+            active_internships = active_internships_result['active_internships']
+            
+            # Completed Internships Query
+            completed_internships_query = "SELECT COUNT(*) AS completed_internships FROM internships WHERE internship_status = 'Completed'"
+            cursor.execute(completed_internships_query)
+            completed_internships_result = cursor.fetchone()
+            completed_internships = completed_internships_result['completed_internships']
+            
+            # Completed Internships Query
+            pending_internships_query = "SELECT COUNT(*) AS pending_internships FROM internships WHERE internship_status = 'Pending'"
+            cursor.execute(pending_internships_query)
+            pending_internships_result = cursor.fetchone()
+            pending_internships = pending_internships_result['pending_internships']
+    finally:
+        # Close the connection
+        connection.close()
+    return active_internships, pending_internships, completed_internships
+
+
+@auth.route('/internship_data')
+def internship_data():
+    active_internships, pending_internships, completed_internships = get_internship_data()
+    data = {
+        'labels': ['Active', 'Pending', 'Completed'],
+        'values': [active_internships, pending_internships, completed_internships]
+    }
+    return jsonify(data)
+
+
+
+def get_internship_stipend_data():
+    # Code to fetch internship data from your database
+    # Connect to MySQL database
+    connection = pymysql.connect(
+        host='localhost',
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASS'),
+        database='internship',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    try:
+        with connection.cursor() as cursor:
+                       
+            # Completed Internships Query
+            stipend_query = """SELECT 
+    SUM(CASE WHEN stipend_amount >= 0 AND stipend_amount <= 10000 THEN 1 ELSE 0 END) AS range_0_10000,
+    SUM(CASE WHEN stipend_amount > 10000 AND stipend_amount <= 20000 THEN 1 ELSE 0 END) AS range_10001_20000,
+    SUM(CASE WHEN stipend_amount > 20000 AND stipend_amount <= 40000 THEN 1 ELSE 0 END) AS range_20001_40000,
+    SUM(CASE WHEN stipend_amount > 40000 AND stipend_amount <= 100000 THEN 1 ELSE 0 END) AS range_40001_100000,
+    SUM(CASE WHEN stipend_amount > 100000 THEN 1 ELSE 0 END) AS range_100001_plus
+FROM internships;"""
+            cursor.execute(stipend_query)
+            stipend_result = cursor.fetchone()
+            
+            range_0_10000= stipend_result['range_0_10000']
+            range_10001_20000= stipend_result['range_10001_20000']
+            range_20001_40000= stipend_result['range_20001_40000']
+            range_40001_100000 = stipend_result['range_40001_100000']
+            range_100001_plus = stipend_result['range_100001_plus']
+            
+
+    finally:
+        # Close the connection
+        connection.close()
+    return range_0_10000, range_10001_20000, range_20001_40000, range_40001_100000, range_100001_plus
+
+range_0_10000, range_10001_20000, range_20001_40000, range_40001_100000, range_100001_plus=get_internship_stipend_data()
+
+stipend_data = {
+    "labels": ["Rs0-Rs10000", "Rs10001-Rs20000", "Rs20001-Rs40000", "Rs40001-Rs100000", "Rs100000+"],
+    "values": [range_0_10000, range_10001_20000, range_20001_40000, range_40001_100000, range_100001_plus]
+}
+
+
+@auth.route('/internship_stipend_data')
+def get_internship_stipend_data():
+    return jsonify(stipend_data)
 
 @auth.route('/apply_od', methods=['POST'])
 def apply_od():
