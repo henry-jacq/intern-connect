@@ -54,38 +54,45 @@
     <div class="container px-sm-5">
         <h3 class="fw-normal fs-4 mt-4">Add Internship</h3>
         <hr class="m-0">
+        {% if msg == True: %}
+            <div class="alert alert-success alert-dismissible my-3 fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                Internship added!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
         <form method="POST" action="/internship/add" class="form-control border-0 p-0 mt-3 mb-5">
             <div class="mb-3">
                 <label for="orgName" class="form-label">Name of Organization</label>
-                <input type="text" class="form-control" id="orgName" name="org_name">
+                <input type="text" class="form-control" id="orgName" name="org_name" required>
             </div>
             <div class="mb-3">
                 <label for="orgAddr" class="form-label">Address of Organization</label>
-                <input type="text" class="form-control" id="orgAddr" name="org_addr">
+                <input type="text" class="form-control" id="orgAddr" name="org_addr" required>
             </div>
             <div class="mb-3">
                 <label for="orgWeb" class="form-label">Website of Organization</label>
-                <input type="text" class="form-control" id="orgWeb" name="org_web">
+                <input type="text" class="form-control" id="orgWeb" name="org_web" required>
             </div>
             <div class="mb-3">
                 <label for="natureOfWork" class="form-label">Nature of work</label>
-                <textarea class="form-control" placeholder="Eg. Software Developer" id="natureOfWork" rows="3" name="nature_work"></textarea>
+                <textarea class="form-control" placeholder="Eg. Software Developer" id="natureOfWork" rows="3" name="nature_work" required></textarea>
             </div>
             <div class="mb-3">
                 <label for="reportAuthority" class="form-label">Reporting Authority</label>
-                <input type="text" class="form-control" id="reportAuthority" placeholder="Eg. Name, Designation, Contact" name="report_authority">
+                <input type="text" class="form-control" id="reportAuthority" placeholder="Eg. Name, Designation, Contact" name="report_authority" required>
             </div>
             <div class="mb-3">
                 <label for="startDate" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="startDate" name="start_date">
+                <input type="date" class="form-control" id="startDate" name="start_date" required>
             </div>
             <div class="mb-3">
                 <label for="endDate" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="endDate" name="end_date">
+                <input type="date" class="form-control" id="endDate" name="end_date" required>
             </div>
             <div class="mb-3">
                 <label for="internMode" class="form-label">Mode of Internship</label>
-                <select name="intern_mode" class="form-select" id="internMode" aria-label="Default None">
+                <select name="intern_mode" class="form-select" id="internMode">
                     <option value="remote">Remote</option>
                     <option value="onsite">On-site</option>
                 </select>
@@ -93,31 +100,35 @@
             <div class="mb-3">
                 <label for="orgStipend" class="form-label">Stipend (Yes/No)</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioYes" value="option1" checked>
+                    <input class="form-check-input" type="radio" name="stipend" id= "stipendRadioYes" value="yes">
                     <label class="form-check-label" for="stipendRadioYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioNo" value="option2">
+                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioNo" value="no" checked>
                     <label class="form-check-label" for="stipendRadioNo">No</label>
+                </div>
+                <div class="my-3 stipend-amount d-none">
+                    <label for="stipendAmount" class="form-label">Stipend Amount</label>
+                    <input type="number" class="form-control" id="stipendAmount" placeholder="Enter stipend amount" name="stipend_amount" required>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="orgPPO" class="form-label">PPO (Yes/No)</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioYes" value="option1">
+                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioYes" value="yes">
                     <label class="form-check-label" for="PPORadioYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioNo" value="option2" checked>
+                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioNo" value="no" checked>
                     <label class="form-check-label" for="PPORadioNo">No</label>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="internStatus" class="form-label">Status of Internship</label>
-                <select class="form-select" id="internStatus" aria-label="Default None" name="intern_status">
-                    <option selected>Yet to Start</option>
-                    <option value="remote">In Progress</option>
-                    <option value="onsite">Completed</option>
+                <select class="form-select" id="internStatus" name="intern_status">
+                    <option value="pending" selected>Pending</option>
+                    <option value="active">Active</option>
+                    <option value="completed">Completed</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -131,6 +142,31 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Get the stipend radio buttons and the stipend amount container
+        const stipendRadioYes = document.getElementById("stipendRadioYes");
+        const stipendRadioNo = document.getElementById("stipendRadioNo");
+        const stipendAmountContainer = document.querySelector(".stipend-amount");
+
+        // Function to toggle the stipend amount visibility
+        function toggleStipendAmount() {
+            if (stipendRadioYes.checked) {
+                // Remove d-none class to show the stipend amount
+                stipendAmountContainer.classList.remove("d-none");
+            } else {
+                // Add d-none class to hide the stipend amount
+                stipendAmountContainer.classList.add("d-none");
+            }
+        }
+
+        // Attach event listeners to the stipend radio buttons
+        stipendRadioYes.addEventListener("change", toggleStipendAmount);
+        stipendRadioNo.addEventListener("change", toggleStipendAmount);
+
+        // Initialize the visibility based on the initial selection
+        toggleStipendAmount();
+    </script>
+
 </body>
 
 </html>
