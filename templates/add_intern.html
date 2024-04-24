@@ -53,6 +53,7 @@
 
     <div class="container px-sm-5">
         <h3 class="fw-normal fs-4 mt-4">Add Internship</h3>
+        {{msg}}
         <hr class="m-0">
         <form method="POST" action="/internship/add" class="form-control border-0 p-0 mt-3 mb-5">
             <div class="mb-3">
@@ -93,29 +94,29 @@
             <div class="mb-3">
                 <label for="orgStipend" class="form-label">Stipend (Yes/No)</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioYes" value="option1" checked>
+                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioYes" value="yes" checked>
                     <label class="form-check-label" for="stipendRadioYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioNo" value="option2">
+                    <input class="form-check-input" type="radio" name="stipend" id="stipendRadioNo" value="no">
                     <label class="form-check-label" for="stipendRadioNo">No</label>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="orgPPO" class="form-label">PPO (Yes/No)</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioYes" value="option1">
+                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioYes" value="yes">
                     <label class="form-check-label" for="PPORadioYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioNo" value="option2" checked>
+                    <input class="form-check-input" type="radio" name="ppo" id="PPORadioNo" value="no" checked>
                     <label class="form-check-label" for="PPORadioNo">No</label>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="internStatus" class="form-label">Status of Internship</label>
                 <select class="form-select" id="internStatus" aria-label="Default None" name="intern_status">
-                    <option selected>Yet to Start</option>
+                    <option value="yet to start" selected>Yet to Start</option>
                     <option value="remote">In Progress</option>
                     <option value="onsite">Completed</option>
                 </select>

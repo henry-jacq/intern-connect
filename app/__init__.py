@@ -19,6 +19,8 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
     app.config['SECRET_KEY'] = 'hhh123'
 
