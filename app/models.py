@@ -5,6 +5,19 @@ class Admin:
     def __init__(self,username,password):
         self.username=username
         self.password=password
+        
+class OD_details(db.Model):
+    __tablename__ = 'od_details'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    digital_id = db.Column(db.String(50))
+    internship_id = db.Column(db.String(50))
+    duration = db.Column(db.String(50))
+    no_of_days = db.Column(db.Integer)
+    dates_of_od = db.Column(db.Integer)
+    od_availed_sem = db.Column(db.Integer)
+    current_cgpa = db.Column(db.Integer)
+
 
 class Internship(db.Model):
     __tablename__ = 'internships'
