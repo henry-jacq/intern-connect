@@ -10,8 +10,10 @@ views=Blueprint('views',__name__)
 def home():
     return render_template('index.html')
 
-@views.route('/login')
+@views.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        return redirect(url_for('views.home'))
     return render_template('login.html')
 
 @views.route('/internship/add', methods=['GET', 'POST'])
@@ -59,13 +61,19 @@ def intern_add():
 def apply_od():
     return render_template('apply_od.html')
 
-@views.route('/od/select_intern')
+@views.route('/od/select_intern', methods=['GET', 'POST'])
 def od_status():
-    return render_template('apply_od2.html')
+    if request.method == 'POST':
+        return render_template('apply_od2.html', msg=True)
+    return render_template('apply_od2.html', msg=False)
 
 @views.route('/profile')
 def profile():
     return render_template('profile.html')
+
+@views.route('/logout')
+def logout():
+    return redirect(url_for('auth.login'))
 
 @views.route('/internship/update')
 def update_intern():
