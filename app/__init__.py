@@ -6,18 +6,16 @@ import os
 from .extensions import db
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static')),
+                         template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')))
 
     user = os.getenv('DB_USER')
     passwd = os.getenv('DB_PASS')
     db_name = os.getenv('DB_NAME')
     db_host = os.getenv('DB_HOST')
 
-    app.static_url_path=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
     app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{user}:{passwd}@{db_host}/{db_name}"
     
-    app.template_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
-
     # Initialize extensions
     db.init_app(app)
     with app.app_context():
