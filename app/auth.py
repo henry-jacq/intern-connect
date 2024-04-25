@@ -8,6 +8,7 @@ from .models import Admin
 from .models import ODApplication
 import pymysql
 import os
+from .models import Internship
 
 
 auth=Blueprint('auth',__name__)
@@ -40,9 +41,19 @@ def load_admin_data():
         return None  # Return None or handle the absence of the file accordingly
 
 
-@auth.route('/admin_reports', methods=['GET', 'POST'])
+
+@auth.route('/admin_reports', methods=['GET'])
 def admin_reports():
-    return render_template("admin/admin_reports.html")
+    # Query the database to retrieve necessary data
+    total_internships = Internship.query.count()
+    active_internships = Internship.query.filter_by(internship_status='Active').count()
+    completed_internships = Internship.query.filter_by(internship_status='Completed').count()
+
+    # Pass the data to the template for rendering
+    return render_template("admin/admin_reports.html", 
+                           total_internships=total_internships, 
+                           active_internships=active_internships, 
+                           completed_internships=completed_internships)
 
 @auth.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
