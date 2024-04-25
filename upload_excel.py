@@ -1,62 +1,68 @@
-from flask import Flask,Blueprint
-from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from  app.models import Internship
-from  __init__ import db
-app = Flask(__name__)
+from app import create_app
+from app.extensions import db
+from dotenv import load_dotenv
 
-# Load configuration for SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://henry:victus@henry007@localhost/internconnect'
-app.config['SECRET_KEY'] = 'hhh123'
-
-# Initialize SQLAlchemy extension
-db.init_app(app)
-
+load_dotenv()
+app=create_app()
 
 # Function to upload internship data from Excel sheet to database
 def upload_internship_data(excel_file):
     with app.app_context():            
         try:
             df = pd.read_excel(excel_file)
+            stipend_amount = None
 
             for index, row in df.iterrows():
-                digital_id = row['Digital ID']
-                organization_name = row['Name of Organisation']
-                organization_address = row['Address of Organisation']
-                organization_website = row['Website Link of Organisation']
-                nature_of_work = row['Nature of Work']
-                ra_name = row['Details of Reporting Authority']['Name']
-                ra_designation = row['Details of Reporting Authority']['Designation']
-                ra_email = row['Details of Reporting Authority']['Email']
-                ra_phone = row['Details of Reporting Authority']['Mobile No.']
-                reporting_authority = f"{ra_name}, {ra_designation}, {ra_email}, {ra_phone}"
-                start_date = row['Start Date']
-                completion_date = row['Completion Date']
-                duration = row['Duration (months/days)']
-                status = row['Status']
-                mode_of_internship = row['Mode of Internship']
-                stipend = True if row['Stipend'] == 'Yes' else False
-                stipend_amount = row['Stipend Amount'] if stipend else None
-                remarks = row['Remarks']
-                offer_letter_path = row['Offer Letter']
-                completion_certificate_path = row['Completion Certificate']
+                digital_id = row['digital_id']
+                org_name = row['org_name']
+                org_address = row['org_address']
+                org_website = row.get('org_website', None)
+                nature_of_work = row['nature_of_work']
+                reporting_authority = row['reporting_authority']
+                start_date = row['start_date']
+                completion_date = row['end_date']
+                duration = row['Duration (Months / Days)']
+                ppo = "Yes" if row['ppo'] == 'PPO Received' else None
+                status = row['internship_status']
+                mode_of_internship = row['internship_mode']
+                stipend = True if row['stipend'] == 'Yes' else False
+            if stipend:
+                stipend_amount_value = row['stipend_amount']
+                if isinstance(stipend_amount_value, str):
+                    digit_chars = ''.join(char for char in stipend_amount_value if char.isdigit())
+                    
+                    if digit_chars:
+                        stipend_amount = int(digit_chars)
+                    else:
+                        stipend_amount = None
+                elif isinstance(stipend_amount_value, (float, int)):
+                    stipend_amount = int(stipend_amount_value)
+                else:
+                    stipend_amount = None
+
+                # remarks = row.get('Remarks', None)
+                offer_letter_path = row['offer_letter']
+                completion_letter_path = row['completion_letter']
                 internship = Internship(
                     digital_id=digital_id,
-                    org_name=organization_name,
-                    org_address=organization_address,
-                    org_website=organization_website,
+                    org_name=org_name,
+                    org_address=org_address,
+                    org_website=org_website,
                     nature_of_work=nature_of_work,
                     reporting_authority=reporting_authority,
                     start_date=start_date,
                     end_date=completion_date,
                     # duration=duration,
-                    status=status,
-                    mode_of_internship=mode_of_internship,
+                    internship_status=status,
+                    internship_mode=mode_of_internship,
+                    ppo=ppo,
                     stipend=stipend,
                     stipend_amount=stipend_amount,
-                    remarks=remarks,
-                    offer_letter_path=offer_letter_path,
-                    completion_certificate_path=completion_certificate_path
+                    # remarks=remarks,
+                    offer_letter=offer_letter_path,
+                    completion_letter=completion_letter_path
                 )
 
                 # Add the internship instance to the database session
