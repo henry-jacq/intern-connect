@@ -20,7 +20,6 @@ def index():
 def login():
     return render_template("login.html")
 
-
 def load_admin_data():
     try:
         # Read the JSON file and load the data back
@@ -40,6 +39,10 @@ def load_admin_data():
     except FileNotFoundError:
         return None  # Return None or handle the absence of the file accordingly
 
+
+@auth.route('/admin_reports', methods=['GET', 'POST'])
+def admin_reports():
+    return render_template("admin/admin_reports.html")
 
 @auth.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
@@ -70,6 +73,12 @@ def admin_login():
     else:
         return render_template("admin/admin_login.html")
 
+
+@auth.route('/admin/create/announcement', methods=['GET', 'POST'])
+def create_announcement():
+    if request.method == 'POST':
+        return render_template('admin/announcement.html', msg=True)
+    return render_template('admin/announcement.html', msg=False)
 
 @auth.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
