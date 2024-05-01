@@ -14,9 +14,6 @@ from .models import Announcements
 
 auth=Blueprint('auth',__name__)
 
-@auth.route('/')
-def index():
-    return render_template('index.html')
 
 @auth.route('/login')
 def login():

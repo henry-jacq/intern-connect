@@ -1,5 +1,5 @@
 from flask import render_template, request, Blueprint, redirect, url_for
-from .models import Internship
+from .models import Internship, Announcements
 from datetime import datetime
 from .extensions import db
 
@@ -8,7 +8,17 @@ views=Blueprint('views',__name__)
 
 @views.route('/')
 def home():
-    return render_template('index.html')
+    query = Announcements.query
+    print(f"Query: {query}")
+    print("Hello world")
+    print(f"Parameters: {query.statement.compile().params}")
+    announcements = query.all()
+
+    anc_list = [{
+        'title': anc.title,
+        'content': anc.content,
+    } for anc in announcements]
+    return render_template('index.html', announce=anc_list)
 
 @views.route('/login', methods=['GET', 'POST'])
 def login():
