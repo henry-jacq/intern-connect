@@ -62,3 +62,27 @@ class ODApplication(db.Model):
     od_dates = db.Column(db.String(100))
     od_details = db.Column(db.String(255))
     current_cgpa = db.Column(db.Float)
+
+
+class Announcements(db.Model):
+    __tablename__ = 'announcements'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.String(255))
+    
+    def __repr__(self):
+        return f"Announcements(id={self.id}, title={self.title}, content={self.content})"
+
+    @classmethod
+    def create(cls, **kwargs):
+        announcements = cls(**kwargs)
+        db.session.add(announcements)
+        db.session.commit()
+        return announcements
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+        
