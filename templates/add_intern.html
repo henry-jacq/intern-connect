@@ -105,7 +105,7 @@
                 </div>
                 <div class="my-3 stipend-amount d-none">
                     <label for="stipendAmount" class="form-label">Stipend Amount</label>
-                    <input type="number" class="form-control" id="stipendAmount" placeholder="Enter stipend amount" name="stipend_amount" required>
+                    <input type="number" class="form-control" id="stipendAmount" placeholder="Enter stipend amount" name="stipend_amount">
                 </div>
             </div>
             <div class="mb-3">
@@ -143,15 +143,18 @@
         const stipendRadioYes = document.getElementById("stipendRadioYes");
         const stipendRadioNo = document.getElementById("stipendRadioNo");
         const stipendAmountContainer = document.querySelector(".stipend-amount");
+        const stipendAmountField = document.getElementById("stipendAmount");
 
         // Function to toggle the stipend amount visibility
         function toggleStipendAmount() {
             if (stipendRadioYes.checked) {
                 // Remove d-none class to show the stipend amount
                 stipendAmountContainer.classList.remove("d-none");
+                stipendAmountField.setAttribute("required");
             } else {
                 // Add d-none class to hide the stipend amount
                 stipendAmountContainer.classList.add("d-none");
+                stipendAmountField.removeAttribute("required");
             }
         }
 

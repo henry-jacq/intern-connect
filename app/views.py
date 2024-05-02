@@ -2,22 +2,20 @@ from flask import render_template, request, Blueprint, redirect, url_for
 from .models import Internship, Announcements
 from datetime import datetime
 from .extensions import db
+import os
 
 
-views=Blueprint('views',__name__)
+views = Blueprint('views', __name__)
+UPLOAD_PATH = os.path.join(os.path.abspath(os.path.join(os.getcwd())), 'uploads')
 
 @views.route('/')
 def home():
-    query = Announcements.query
-    print(f"Query: {query}")
-    print("Hello world")
-    print(f"Parameters: {query.statement.compile().params}")
-    announcements = query.all()
+    query = Announcements.query.all()
 
     anc_list = [{
         'title': anc.title,
         'content': anc.content,
-    } for anc in announcements]
+    } for anc in query]
     return render_template('index.html', announce=anc_list)
 
 @views.route('/login', methods=['GET', 'POST'])
