@@ -9,6 +9,7 @@ from .models import ODApplication
 import pymysql
 import os
 from .models import Internship
+from datetime import datetime
 
 
 auth=Blueprint('auth',__name__)
@@ -16,7 +17,12 @@ auth=Blueprint('auth',__name__)
 @auth.route('/')
 def index():
     return render_template('index.html')
-
+@auth.route("/add_message", methods=["POST"])
+def add_message():
+    message = request.form["message"]
+    message.append(message)
+    flash("OD details added successfully!")
+    return redirect(url_for("index"))
 @auth.route('/login')
 def login():
     return render_template("login.html")
@@ -139,19 +145,65 @@ def admin_dashboard():
                            completed_internships=completed_internships)
 
 
-@auth.route('/apply_od', methods=['POST'])
-def apply_od():
+@auth.route('/save_od', methods=['POST'])
+def save_od():
     duration = request.form['duration']
-    od_days_required = request.form['odDaysRequired']
-    od_dates = request.form['odDates']
-    od_details = request.form['odDetails']
-    current_cgpa = request.form['currentCGPA']
+    od_days_required = request.form['od_days_required']
+    od_date_range = request.form['od_dates']
+    od_details = request.form['od_details']
+    current_cgpa = request.form['current_cgpa']
+    try:
+        # Attempt to convert the date range string into a datetime object
+        od_dates = datetime.strptime(od_date_range, '%m/%d/%Y-%m/%d/%Y')
+    except ValueError:
+        # Handle the case where the date range string cannot be converted
+        flash('Invalid date format. Please use MM/DD/YYYY - MM/DD/YYYY format.', 'danger')
+        return redirect(url_for('views.home'))
     
     # Create a new OD application object and save it to the database
-    od_application = ODApplication(id=id,duration=duration, od_days_required=od_days_required, od_dates=od_dates, 
+    od_application = ODApplication(duration=duration, od_days_required=od_days_required, od_dates=od_dates, 
                                    od_details=od_details, current_cgpa=current_cgpa)
     db.session.add(od_application)
     db.session.commit()
     
-    # Redirect to the index page after form submission
-    return redirect(url_for('auth.index'))
+    # Display a flash message confirming that the OD details have been added
+    flash('OD details added successfully!', 'success')
+    return redirect(url_for('views.home'))  # Redirect to the index page after form submission
+
+
+@auth.route('/od_status', methods=['GET', 'POST'])
+def od_status():
+    try:
+        # Connect to MySQL database
+        connection = pymysql.connect(
+            host='localhost',
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASS'),
+            database=os.getenv('DB_NAME'),
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        with connection.cursor() as cursor:
+            # Query to fetch all fields from od_applications table
+            query = "SELECT duration, od_days_required, od_dates, od_details, current_cgpa FROM od_applications"
+            cursor.execute(query)
+            od_applications = cursor.fetchall()
+
+        # Close the connection
+        connection.close()
+
+        # Render template with od_applications data
+        return render_template('od_status.html', od_applications=od_applications)
+
+    except Exception as e:
+        # Handle exceptions here
+        print("An error occurred:", str(e))
+        return f"<h1>Error</h1><p>{str(e)}</p>", 500
+    
+@auth.route('/faculty_approvals')
+def faculty_approvals():
+    # Query database to fetch faculty approvals data
+    # For example:
+    # approvals = FacultyApproval.query.all()
+    # Pass the approvals data to the template
+    return render_template('faculty_approvals.html')

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OD Details with Faculty Approvals</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .approval-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>OD Details</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Duration</th>
+                <th>OD days required</th>
+                <th>OD Dates</th>
+                <th>OD Details</th>
+                <th>Current CGPA</th>
+                <!-- Add more table headers for other details -->
+            </tr>
+        </thead>
+        <tbody>
+           
+            {% for od_application in od_applications %}
+            <tr>
+                <td>{{ od_application['duration'] }}</td>
+                <td>{{ od_application['od_days_required'] }}</td>
+                <td>{{ od_application['od_dates'] }}</td>
+                <td>{{ od_application['od_details'] }}</td>
+                <td>{{ od_application['current_cgpa'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Button for Faculty Approval -->
+<button class="approval-btn" onclick="redirectToFacultyApprovals()">Faculty Approvals</button>
+
+<!-- JavaScript function for Faculty Approval -->
+<script>
+    function redirectToFacultyApprovals() {
+        window.location.href = '/faculty_approvals';
+    }
+</script>
+</body>
+</html>

@@ -14,7 +14,7 @@ def create_app():
     db_name = os.getenv('DB_NAME')
     db_host = os.getenv('DB_HOST')
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{user}:{passwd}@{db_host}/{db_name}"
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://root:1234@localhost/internship"
     
     # Initialize extensions
     db.init_app(app)

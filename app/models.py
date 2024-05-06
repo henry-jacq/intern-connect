@@ -62,3 +62,14 @@ class ODApplication(db.Model):
     od_dates = db.Column(db.String(100))
     od_details = db.Column(db.String(255))
     current_cgpa = db.Column(db.Float)
+
+    @classmethod
+    def create(cls, **kwargs):
+        od_application= cls(**kwargs)
+        db.session.add(od_application)
+        db.session.commit()
+        return od_application
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
