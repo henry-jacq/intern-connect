@@ -10,6 +10,7 @@ import pymysql
 import os
 from .models import Internship
 from datetime import datetime
+from .models import Announcements
 
 
 auth=Blueprint('auth',__name__)
@@ -23,6 +24,7 @@ def add_message():
     message.append(message)
     flash("OD details added successfully!")
     return redirect(url_for("index"))
+
 @auth.route('/login')
 def login():
     return render_template("login.html")
@@ -94,6 +96,15 @@ def admin_login():
 @auth.route('/admin/create/announcement', methods=['GET', 'POST'])
 def create_announcement():
     if request.method == 'POST':
+        title = request.form.get("title")
+        content = request.form.get("content")
+        
+        announcements = Announcements(
+            title=title, content=content
+        )
+        db.session.add(announcements)
+        db.session.commit()
+        
         return render_template('admin/announcement.html', msg=True)
     return render_template('admin/announcement.html', msg=False)
 

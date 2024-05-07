@@ -109,20 +109,15 @@
     <div class="container my-5">
         <h3 class="fw-normal fs-4 mt-4">Announcements 🎉</h3>
         <hr>
+        {% for i in announce %}
         <div class="card bg-body-tertiary shadow rounded-3 mb-3">
             <div class="card-body">
-                <h5 class="card-title text-body-emphasis">Important Update</h5>
-                <p class="card-text">We are excited to announce new internship opportunities with leading companies in various industries. Make sure to check them out!</p>
+                <h5 class="card-title text-body-emphasis">{{i.title}}</h5>
+                <p class="card-text">{{i.content}}</p>
                 <a href="#" class="btn btn-sm btn-primary">Read More</a>
             </div>
         </div>
-        <div class="card bg-body-tertiary shadow rounded-3 mb-3">
-            <div class="card-body">
-                <h5 class="card-title text-body-emphasis">Upcoming Events</h5>
-                <p class="card-text">Join us for our upcoming networking event on March 20th, where you can connect with industry professionals and learn about exciting internship opportunities.</p>
-                <a href="#" class="btn btn-sm btn-primary">Read More</a>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 
 
