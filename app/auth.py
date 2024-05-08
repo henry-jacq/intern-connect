@@ -1,5 +1,5 @@
 from flask import Blueprint,Flask, render_template, request, redirect, url_for, session, flash
-import json, os
+import pymysql, os
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, redirect, url_for, flash
 from .extensions import db
