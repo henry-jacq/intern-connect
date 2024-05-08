@@ -1,9 +1,9 @@
-from flask import render_template, request, Blueprint, redirect, url_for,flash
-from .models import Internship,ODApplication,Announcements
+from flask import render_template, request, Blueprint, redirect, url_for, session
+from .models import Internship, Announcements
 from datetime import datetime
 from .extensions import db
-import re
 import os
+
 
 views = Blueprint('views', __name__)
 UPLOAD_PATH = os.path.join(os.path.abspath(os.path.join(os.getcwd())), 'uploads')
@@ -18,11 +18,6 @@ def home():
     } for anc in query]
     return render_template('index.html', announce=anc_list)
 
-@views.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        return redirect(url_for('views.home'))
-    return render_template('login.html')
 
 @views.route('/internship/add', methods=['GET', 'POST'])
 def intern_add():
@@ -70,43 +65,9 @@ def apply_od():
     return render_template('apply_od.html')
 
 @views.route('/od/select_intern', methods=['GET', 'POST'])
-def select_intern():
-    duration = None
-    od_days_required=None
-    
+def od_status():
     if request.method == 'POST':
-       duration=request.form['duration']
-       od_days_required=request.form['od_days_required']
-       od_date_range = request.form['od_dates']
-       od_details=request.form['od_details']
-       current_cgpa=request.form['current_cgpa']
-    
-# Define a regular expression pattern to match the date range format
-       pattern = r'(?P<m_start>\d{2})/(?P<d_start>\d{2})/(?P<y_start>\d{4})-(?P<m_end>\d{2})/(?P<d_end>\d{2})/(?P<y_end>\d{4})'
-
-# Use regular expression to extract start and end dates from the date range string
-       match = re.match(pattern, od_date_range)
-       if match:
-           # Extract start and end dates from the match object
-           start_date = datetime(int(match.group('y_start')), int(match.group('m_start')), int(match.group('d_start')))
-           end_date = datetime(int(match.group('y_end')), int(match.group('m_end')), int(match.group('d_end')))
-           od_dates = f"{start_date.strftime('%Y-%m-%d')} - {end_date.strftime('%Y-%m-%d')}"
-           od_application=ODApplication(duration=duration,
-                             od_days_required=od_days_required,
-                             od_dates=od_dates,
-                             od_details=od_details,
-                             current_cgpa=current_cgpa)
-           
-       
-           db.session.add(od_application)
-           db.session.commit()
-           # Display a flash message confirming that the OD details have been added
-           flash('OD details added successfully!', 'success')
-           return render_template('apply_od2.html', msg=True)
-       else:
-           # Handle the case where the date range is not in the expected format
-           flash('Invalid date range format. Please use the format DD/MM/YYYY-DD/MM/YYYY', 'danger')
-           return redirect(url_for('views.select_intern'))
+        return render_template('apply_od2.html', msg=True)
     return render_template('apply_od2.html', msg=False)
 
 @views.route('/profile')
@@ -115,6 +76,8 @@ def profile():
 
 @views.route('/logout')
 def logout():
+    if session.get('user'):
+        session.clear()
     return redirect(url_for('auth.login'))
 
 @views.route('/internship/update')
@@ -123,3 +86,5 @@ def update_intern():
 
 if __name__ == '__main__':
     views.run(debug=True)
+    
+    

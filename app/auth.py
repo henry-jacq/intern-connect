@@ -1,54 +1,32 @@
-from flask import Blueprint,Flask, render_template, request, redirect, url_for, session,flash
-import json
-from pathlib import Path
+from flask import Blueprint,Flask, render_template, request, redirect, url_for, session, flash
+import json, os
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, redirect, url_for, flash
 from .extensions import db
 from .models import Admin
 from .models import ODApplication
-import pymysql
-import os
 from .models import Internship
-from datetime import datetime
 from .models import Announcements
 
 
-auth=Blueprint('auth',__name__)
+auth = Blueprint('auth',__name__)
 
-@auth.route('/')
-def index():
-    return render_template('index.html')
-@auth.route("/add_message", methods=["POST"])
-def add_message():
-    message = request.form["message"]
-    message.append(message)
-    flash("OD details added successfully!")
-    return redirect(url_for("index"))
+# @auth.before_request
+# def check_user():
+#     print(session.get('user'))
+#     if 'user' in session:
+#         return redirect(url_for('auth.login'))
 
-@auth.route('/login')
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form.get("digital_id")
+        password = request.form.get("password")
+        if username == password:
+            session['user'] = True
+            return redirect(url_for('views.home'))
+        return render_template("login.html", error=True)
     return render_template("login.html")
-
-def load_admin_data():
-    try:
-        # Read the JSON file and load the data back
-        with open("admin_credentials.json", "r") as json_file:
-            loaded_admin_list = json.load(json_file)
-
-        # Retrieve the singleton instance of ClinicAdminSingleton
-        admin_instance = Admin(None, None)
-
-        # Update the singleton instance with the loaded data
-        admin_instance.username = loaded_admin_list[0]['username']
-        admin_instance.password = loaded_admin_list[0]['password']
-
-        # Now you can work with the admin_instance
-
-        return [admin_instance]
-    except FileNotFoundError:
-        return None  # Return None or handle the absence of the file accordingly
-
-
 
 @auth.route('/admin_reports', methods=['GET'])
 def admin_reports():
@@ -156,65 +134,20 @@ def admin_dashboard():
                            completed_internships=completed_internships)
 
 
-@auth.route('/save_od', methods=['POST'])
-def save_od():
+@auth.route('/apply_od', methods=['POST'])
+def apply_od():
     duration = request.form['duration']
-    od_days_required = request.form['od_days_required']
-    od_date_range = request.form['od_dates']
-    od_details = request.form['od_details']
-    current_cgpa = request.form['current_cgpa']
-    try:
-        # Attempt to convert the date range string into a datetime object
-        od_dates = datetime.strptime(od_date_range, '%m/%d/%Y-%m/%d/%Y')
-    except ValueError:
-        # Handle the case where the date range string cannot be converted
-        flash('Invalid date format. Please use MM/DD/YYYY - MM/DD/YYYY format.', 'danger')
-        return redirect(url_for('views.home'))
+    od_days_required = request.form['odDaysRequired']
+    od_dates = request.form['odDates']
+    od_details = request.form['odDetails']
+    current_cgpa = request.form['currentCGPA']
     
     # Create a new OD application object and save it to the database
-    od_application = ODApplication(duration=duration, od_days_required=od_days_required, od_dates=od_dates, 
+    od_application = ODApplication(id=id,duration=duration, od_days_required=od_days_required, od_dates=od_dates, 
                                    od_details=od_details, current_cgpa=current_cgpa)
     db.session.add(od_application)
     db.session.commit()
     
-    # Display a flash message confirming that the OD details have been added
-    flash('OD details added successfully!', 'success')
-    return redirect(url_for('views.home'))  # Redirect to the index page after form submission
+    # Redirect to the index page after form submission
+    return redirect(url_for('auth.index'))
 
-
-@auth.route('/od_status', methods=['GET', 'POST'])
-def od_status():
-    try:
-        # Connect to MySQL database
-        connection = pymysql.connect(
-            host='localhost',
-            user=os.getenv('DB_USER'),
-            password=os.getenv('DB_PASS'),
-            database=os.getenv('DB_NAME'),
-            cursorclass=pymysql.cursors.DictCursor
-        )
-
-        with connection.cursor() as cursor:
-            # Query to fetch all fields from od_applications table
-            query = "SELECT duration, od_days_required, od_dates, od_details, current_cgpa FROM od_applications"
-            cursor.execute(query)
-            od_applications = cursor.fetchall()
-
-        # Close the connection
-        connection.close()
-
-        # Render template with od_applications data
-        return render_template('od_status.html', od_applications=od_applications)
-
-    except Exception as e:
-        # Handle exceptions here
-        print("An error occurred:", str(e))
-        return f"<h1>Error</h1><p>{str(e)}</p>", 500
-    
-@auth.route('/faculty_approvals')
-def faculty_approvals():
-    # Query database to fetch faculty approvals data
-    # For example:
-    # approvals = FacultyApproval.query.all()
-    # Pass the approvals data to the template
-    return render_template('faculty_approvals.html')
