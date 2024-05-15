@@ -11,44 +11,36 @@
 
 <body>
 
-    <div class="container ">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary shadow rounded mt-3 " aria-label="Eleventh navbar example ">
-            <div class="container-fluid ">
-                <a class="navbar-brand fw-light fs-4 me-auto link-body-emphasis " href="/ ">
-                    <img src="{{ url_for('static', filename='logo.svg') }}" width="38 " class="d-inline-block align-text-top ">
-                    <div class="d-none d-md-inline-block ">
-                        <span>InternConnect</span>
-                    </div>
-                </a>
-                <button class="navbar-toggler collapsed " type="button " data-bs-toggle="collapse " data-bs-target="#navbarsExample09 " aria-controls="navbarsExample09 " aria-expanded="false " aria-label="Toggle navigation ">
-                    <span class="navbar-toggler-icon "></span>
-                </button>
-
-                <div class="navbar-collapse collapse " id="navbarsExample09 ">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
-                        <!-- <li class="nav-item my-auto me-3 ">
-                            <a class="nav-link " href="# ">Link</a>
-                        <a role="button " class="btn btn-sm btn-primary ">Add Internship</a>
-                        </li> -->
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link active " href="# " data-bs-toggle="dropdown " data-bs-auto-close="outside " aria-expanded="false ">
-                                <img class="img-fluid border border-prime border-2 rounded-circle " src="https://avatars.githubusercontent.com/u/162424612 " width="38 " height="38 ">
-                                <svg xmlns="http://www.w3.org/2000/svg " width="16 " height="16 " fill="currentColor " class="bi bi-chevron-down " viewBox="0 0 16 16 ">
-                                    <path fill-rule="evenodd "
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708 " />
-                                </svg>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end ">
-                                <li><a class="dropdown-item " href="/profile">My Profile</a></li>
-                                <li class="dropdown-divider "></li>
-                                <li><a class="dropdown-item " href="/logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fs-4 me-auto link-body-emphasis" href="/">
+                <img src="{{ url_for('static', filename='logo.svg') }}" width="38" class="d-inline-block align-text-top">
+                <div class="d-none d-md-inline-block">
+                    <span>InternConnect</span>
                 </div>
+            </a>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+            <div class="navbar-collapse collapse" id="navbarsExample09">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- <li class="nav-item my-auto me-3">
+                        <a class="nav-link" href="#">Link</a>
+                    <a role="button" class="btn btn-sm btn-primary">Add Internship</a>
+                    </li> -->
+                    <li class="nav-item my-3 me-3">
+                        <a class="link-body-emphasis text-decoration-none" href="/profile">
+                            <div class="d-none"></div>
+                            My Profile</a>
+                    </li>
+                    <li class="nav-item my-3 me-3">
+                        <a class="link-body-emphasis text-decoration-none" href="/logout">Logout</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 
     <div class="container">
         <div class="my-4">
@@ -59,14 +51,12 @@
                 </ol>
             </nav>
         </div>
-        <h3 class="fw-normal fs-4 mt-5 ">Apply OD</h3>
-        <hr class="m-0 ">
-        <div class="container py-4 ">
-            <h3 class="fs-5 fw-normal mt-3 ">My Internships</h3>
-            <hr class="m-0 mb-3 ">
-            <p class="fs-6 mb-3 ">Select one to update the internship details</label>
+        <h3 class="fw-normal fs-4 mt-5 ">Select Internship</h3>
+        <hr class="m-0">
+        <p class="fs-6 py-3">Select one to update the internship details</label>
+            <div class="table-responsive">
                 <table class="table">
-                    <thead class="px-0 ">
+                    <thead class="px-0">
                         <tr>
                             <th scope="col " class="text-center ">Intern ID</th>
                             <th scope="col " class="text-center ">Name of Organization</th>
