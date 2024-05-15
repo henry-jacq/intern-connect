@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-lg bg-body-tertiary shadow rounded mt-3" aria-label="Eleventh navbar example">
             <div class="container-fluid">
                 <a class="navbar-brand fw-light fs-4 me-auto link-body-emphasis" href="/">
-                    <img src="./assets/logo.svg" width="38" class="d-inline-block align-text-top">
+                    <img src="{{ url_for('static', filename='logo.svg') }}" width="38" class="d-inline-block align-text-top">
                     <div class="d-none d-md-inline-block">
                         <span>InternConnect</span>
                     </div>
@@ -56,7 +56,7 @@
                                 <li><a class="dropdown-item" href="profile.html">My Profile</a></li>
                                 <li><a class="dropdown-item" href="#">My Internships</a></li>
                                 <li class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -68,7 +68,7 @@
     <div class="container px-sm-5 py-3 mb-5">
         <h3 class="fw-normal fs-4 mt-5">Apply OD</h3>
         <hr class="m-0">
-        <form action="{{ url_for('views.select_intern') }}" method="POST">
+<form action="{{ url_for('views.select_intern') }}" method="POST">
             <div class="mb-3">
                 <label for="duration" class="form-label">Duration (In Days):</label>
                 <input type="text" class="form-control" id="duration" name="duration" required>
