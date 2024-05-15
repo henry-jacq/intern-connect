@@ -11,10 +11,10 @@ from .models import Announcements
 
 auth = Blueprint('auth',__name__)
 
-@auth.before_request
-def check_user():
-    if 'user' in session:
-        return redirect(url_for('views.home'))
+# @auth.before_request
+# def check_user():
+#     if 'user' in session:
+#         return redirect(url_for('views.home'))
 
 @auth.route("/add_message", methods=["POST"])
 def add_message():
