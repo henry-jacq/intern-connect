@@ -166,7 +166,7 @@ def apply_od():
     return redirect(url_for('views.home'))  # Redirect to the index page after form submission
 
 
-@auth.route('/od_status', methods=['GET', 'POST'])
+@auth.route('/od/status', methods=['GET', 'POST'])
 def od_status():
     try:
         # Connect to MySQL database

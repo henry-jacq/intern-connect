@@ -46,7 +46,15 @@
         </nav>
     </div>
 
-    <div class="container px-sm-5">
+    <div class="container">
+        <div class="my-4">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb border p-3 rounded">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-body">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="/internship/add" class="text-decoration-none">Add Intern</a></li>
+                </ol>
+            </nav>
+        </div>
         <h3 class="fw-normal fs-4 mt-4">Add Internship</h3>
         <hr class="m-0">
         {% if msg == True: %}
@@ -57,13 +65,15 @@
             </div>
         {% endif %}
         <form method="POST" action="/internship/add" class="form-control border-0 p-0 mt-3 mb-5">
-            <div class="mb-3">
-                <label for="orgName" class="form-label">Name of Organization</label>
-                <input type="text" class="form-control" id="orgName" name="org_name" required>
-            </div>
-            <div class="mb-3">
-                <label for="orgAddr" class="form-label">Address of Organization</label>
-                <input type="text" class="form-control" id="orgAddr" name="org_addr" required>
+            <div class="row g-3 my-3">
+                <div class="col-md-6">
+                    <label for="orgName" class="form-label">Name of Organization</label>
+                    <input type="text" class="form-control" id="orgName" name="org_name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="orgAddr" class="form-label">Address of Organization</label>
+                    <input type="text" class="form-control" id="orgAddr" name="org_addr" required>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="orgWeb" class="form-label">Website of Organization</label>
@@ -77,13 +87,15 @@
                 <label for="reportAuthority" class="form-label">Reporting Authority</label>
                 <input type="text" class="form-control" id="reportAuthority" placeholder="Eg. Name, Designation, Contact" name="report_authority" required>
             </div>
-            <div class="mb-3">
-                <label for="startDate" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="startDate" name="start_date" required>
-            </div>
-            <div class="mb-3">
-                <label for="endDate" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="endDate" name="end_date" required>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" name="start_date" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="endDate" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="endDate" name="end_date" required>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="internMode" class="form-label">Mode of Internship</label>
