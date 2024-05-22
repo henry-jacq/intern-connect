@@ -92,3 +92,25 @@ class Announcements(db.Model):
         return cls.query.filter_by(id=id).first()
 
         
+class Students(db.Model):
+    __tablename__ = 'students'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    digital_id = db.Column(db.Integer)
+    name = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    reg_no = db.Column(db.Integer)
+    email = db.Column(db.String(255))
+    
+    @classmethod
+    def create(cls, **kwargs):
+        announcements = cls(**kwargs)
+        db.session.add(announcements)
+        db.session.commit()
+        return announcements
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+    
+    

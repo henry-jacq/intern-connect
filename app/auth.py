@@ -3,7 +3,7 @@ import pymysql, os, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, redirect, url_for, flash
 from .extensions import db
-from .models import Admin
+from .models import Students
 from .models import ODApplication
 from .models import Internship
 from .models import Announcements
@@ -11,10 +11,10 @@ from .models import Announcements
 
 auth = Blueprint('auth',__name__)
 
-# @auth.before_request
-# def check_user():
-#     if 'user' in session:
-#         return redirect(url_for('views.home'))
+@auth.before_request
+def check_user():
+    if 'user' in session:
+        return redirect(url_for('views.home'))
 
 @auth.route("/add_message", methods=["POST"])
 def add_message():
@@ -26,11 +26,16 @@ def add_message():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get("digital_id")
+        digital_id = int(request.form.get("digital_id"))
         password = request.form.get("password")
-        if username == password:
-            session['user'] = True
-            return redirect(url_for('views.home'))
+        query = Students.query.filter_by(digital_id=2212023)
+
+        if query.count() > 0:
+            results = query.all()[0]
+        
+            if results.digital_id == digital_id and results.password == password:
+                session['user'] = True
+                return redirect(url_for('views.home'))
         return render_template("login.html", error=True)
     return render_template("login.html")
 
