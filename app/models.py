@@ -1,23 +1,14 @@
 from .extensions import db
 
-
-class Admin:
-    def __init__(self,username,password):
-        self.username=username
-        self.password=password
-        
-class OD_details(db.Model):
-    __tablename__ = 'od_details'
+class Students(db.Model):
+    __tablename__ = 'students'
     
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    digital_id = db.Column(db.String(50))
-    internship_id = db.Column(db.String(50))
-    duration = db.Column(db.String(50))
-    no_of_days = db.Column(db.Integer)
-    dates_of_od = db.Column(db.Integer)
-    od_availed_sem = db.Column(db.Integer)
-    current_cgpa = db.Column(db.Integer)
-
+    id = db.Column(db.Integer, primary_key=True)
+    digital_id = db.Column(db.Integer)
+    name = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    reg_no = db.Column(db.Integer)
+    email = db.Column(db.String(255))
 
 class Internship(db.Model):
     __tablename__ = 'internships'
@@ -39,20 +30,6 @@ class Internship(db.Model):
     offer_letter = db.Column(db.String(255))
     completion_letter = db.Column(db.String(255))
 
-    def __repr__(self):
-        return f"Internship(id={self.id}, digital_id={self.digital_id}, organization_name={self.org_name})"
-
-    @classmethod
-    def create(cls, **kwargs):
-        internship = cls(**kwargs)
-        db.session.add(internship)
-        db.session.commit()
-        return internship
-
-    @classmethod
-    def get_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
-
 class ODApplication(db.Model):
     __tablename__ = 'od_applications'
 
@@ -63,54 +40,9 @@ class ODApplication(db.Model):
     od_details = db.Column(db.String(255))
     current_cgpa = db.Column(db.Float)
 
-    @classmethod
-    def create(cls, **kwargs):
-        od_application= cls(**kwargs)
-        db.session.add(od_application)
-        db.session.commit()
-        return od_application
-
 class Announcements(db.Model):
     __tablename__ = 'announcements'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     content = db.Column(db.String(255))
-    
-    def __repr__(self):
-        return f"Announcements(id={self.id}, title={self.title}, content={self.content})"
-
-    @classmethod
-    def create(cls, **kwargs):
-        announcements = cls(**kwargs)
-        db.session.add(announcements)
-        db.session.commit()
-        return announcements
-
-    @classmethod
-    def get_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
-
-        
-class Students(db.Model):
-    __tablename__ = 'students'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    digital_id = db.Column(db.Integer)
-    name = db.Column(db.String(255))
-    password = db.Column(db.String(255))
-    reg_no = db.Column(db.Integer)
-    email = db.Column(db.String(255))
-    
-    @classmethod
-    def create(cls, **kwargs):
-        announcements = cls(**kwargs)
-        db.session.add(announcements)
-        db.session.commit()
-        return announcements
-
-    @classmethod
-    def get_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
-    
-    

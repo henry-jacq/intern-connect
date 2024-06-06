@@ -1,15 +1,9 @@
-from flask import Blueprint,Flask, render_template, request, redirect, url_for, session, flash
-import pymysql, os, datetime
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import render_template, request, redirect, url_for, flash
 from .extensions import db
-from .models import Students
-from .models import ODApplication
-from .models import Internship
-from .models import Announcements
+from .models import Students, ODApplication, Internship, Announcements
 
-
-auth = Blueprint('auth',__name__)
+auth = Blueprint('auth', __name__)
 
 @auth.before_request
 def check_user():
@@ -19,7 +13,6 @@ def check_user():
 @auth.route("/add_message", methods=["POST"])
 def add_message():
     message = request.form["message"]
-    message.append(message)
     flash("OD details added successfully!")
     return redirect(url_for("index"))
 
@@ -28,25 +21,20 @@ def login():
     if request.method == 'POST':
         digital_id = int(request.form.get("digital_id"))
         password = request.form.get("password")
-        query = Students.query.filter_by(digital_id=2212023)
-
-        if query.count() > 0:
-            results = query.all()[0]
+        student = Students.query.filter_by(digital_id=digital_id).first()
         
-            if results.digital_id == digital_id and results.password == password:
-                session['user'] = True
-                return redirect(url_for('views.home'))
-        return render_template("login.html", error=True)
+        if student and check_password_hash(student.password, password):
+            session['user'] = True
+            return redirect(url_for('views.home'))
+        flash('Invalid credentials')
     return render_template("login.html")
 
 @auth.route('/admin_reports', methods=['GET'])
 def admin_reports():
-    # Query the database to retrieve necessary data
     total_internships = Internship.query.count()
     active_internships = Internship.query.filter_by(internship_status='Active').count()
     completed_internships = Internship.query.filter_by(internship_status='Completed').count()
 
-    # Pass the data to the template for rendering
     return render_template("admin/admin_reports.html", 
                            total_internships=total_internships, 
                            active_internships=active_internships, 
@@ -54,33 +42,11 @@ def admin_reports():
 
 @auth.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
-    global adminlist
-    #adminlist = load_admin_data()
-
     if request.method == 'POST':
-        username = request.form.get("username")
+        email = request.form.get("email")
         password = request.form.get("password")
-        user=os.getenv("ADMIN_USER")
-        passwd=os.getenv("ADMIN_PASSWORD")
-        hash_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
-
-        
-        if user == username:
-            if passwd == password:
-                flash("Login successful.")
-                session['admin_username'] = user
-                session['admin_password'] = passwd
-                return redirect(url_for('auth.admin_dashboard'))
-            else:
-                flash("Invalid credentials. Please try again.")
-                return render_template("admin/admin_login.html")
-        
-        flash('You are not a recognized admin user')
-        return redirect(url_for('auth.login'))
-
-    else:
-        return render_template("admin/admin_login.html")
-
+        # Add authentication logic
+    return render_template("admin/admin_login.html")
 
 @auth.route('/admin/create/announcement', methods=['GET', 'POST'])
 def create_announcement():
@@ -88,62 +54,25 @@ def create_announcement():
         title = request.form.get("title")
         content = request.form.get("content")
         
-        announcements = Announcements(
-            title=title, content=content
-        )
-        db.session.add(announcements)
+        announcement = Announcements(title=title, content=content)
+        db.session.add(announcement)
         db.session.commit()
         
         return render_template('admin/announcement.html', msg=True)
     return render_template('admin/announcement.html', msg=False)
 
-@auth.route('/admin_dashboard', methods=['GET', 'POST'])
+@auth.route('/admin_dashboard', methods=['GET'])
 def admin_dashboard():
-         
-    # Connect to MySQL database
-    connection = pymysql.connect(
-        host='localhost',
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASS'),
-        database=os.getenv('DB_NAME'),
-        cursorclass=pymysql.cursors.DictCursor
-    )
+    total_internships = Internship.query.count()
+    total_students = Students.query.count()
+    active_internships = Internship.query.filter_by(internship_status='Active').count()
+    completed_internships = Internship.query.filter_by(internship_status='Completed').count()
 
-    try:
-        with connection.cursor() as cursor:
-            # Total Internships Query
-            total_internships_query = "SELECT COUNT(*) AS total_internships FROM internships"
-            cursor.execute(total_internships_query)
-            total_internships_result = cursor.fetchone()
-            total_internships = total_internships_result['total_internships']
-            
-            # Total Students Query
-            total_students_query = "SELECT COUNT(*) AS total_students FROM internships"
-            cursor.execute(total_students_query)
-            total_students_result = cursor.fetchone()
-            total_students = total_students_result['total_students']
-            
-            # Active Internships Query
-            active_internships_query = "SELECT COUNT(*) AS active_internships FROM internships WHERE internship_status = 'Active'"
-            cursor.execute(active_internships_query)
-            active_internships_result = cursor.fetchone()
-            active_internships = active_internships_result['active_internships']
-            
-            # Completed Internships Query
-            completed_internships_query = "SELECT COUNT(*) AS completed_internships FROM internships WHERE internship_status = 'Completed'"
-            cursor.execute(completed_internships_query)
-            completed_internships_result = cursor.fetchone()
-            completed_internships = completed_internships_result['completed_internships']
-            
-    finally:
-        # Close the connection
-        connection.close()
-
-    
-    return render_template('admin/admin_dash.html', total_internships=total_internships, 
-                           total_students=total_students, active_internships=active_internships, 
+    return render_template('admin/admin_dash.html', 
+                           total_internships=total_internships, 
+                           total_students=total_students, 
+                           active_internships=active_internships, 
                            completed_internships=completed_internships)
-
 
 @auth.route('/apply_od', methods=['POST'])
 def apply_od():
@@ -152,59 +81,29 @@ def apply_od():
     od_date_range = request.form['od_dates']
     od_details = request.form['od_details']
     current_cgpa = request.form['current_cgpa']
-    try:
-        # Attempt to convert the date range string into a datetime object
-        od_dates = datetime.strptime(od_date_range, '%m/%d/%Y-%m/%d/%Y')
-    except ValueError:
-        # Handle the case where the date range string cannot be converted
+
+    pattern = r'(?P<m_start>\d{2})/(?P<d_start>\d{2})/(?P<y_start>\d{4})-(?P<m_end>\d{2})/(?P<d_end>\d{2})/(?P<y_end>\d{4})'
+    match = re.match(pattern, od_date_range)
+    if match:
+        start_date = datetime(int(match.group('y_start')), int(match.group('m_start')), int(match.group('d_start')))
+        end_date = datetime(int(match.group('y_end')), int(match.group('m_end')), int(match.group('d_end')))
+        od_dates = f"{start_date.strftime('%Y-%m-%d')} - {end_date.strftime('%Y-%m-%d')}"
+        od_application = ODApplication(duration=duration, od_days_required=od_days_required, od_dates=od_dates, od_details=od_details, current_cgpa=current_cgpa)
+
+        db.session.add(od_application)
+        db.session.commit()
+        flash('OD details added successfully!', 'success')
+        return redirect(url_for('views.home'))
+    else:
         flash('Invalid date format. Please use MM/DD/YYYY - MM/DD/YYYY format.', 'danger')
         return redirect(url_for('views.home'))
 
-    # Create a new OD application object and save it to the database
-    od_application = ODApplication(duration=duration, od_days_required=od_days_required, od_dates=od_dates, 
-                                   od_details=od_details, current_cgpa=current_cgpa)
-    db.session.add(od_application)
-    db.session.commit()
-
-    # Display a flash message confirming that the OD details have been added
-    flash('OD details added successfully!', 'success')
-    return redirect(url_for('views.home'))  # Redirect to the index page after form submission
-
-
-@auth.route('/od/status', methods=['GET', 'POST'])
+@auth.route('/od/status', methods=['GET'])
 def od_status():
-    try:
-        # Connect to MySQL database
-        connection = pymysql.connect(
-            host='localhost',
-            user=os.getenv('DB_USER'),
-            password=os.getenv('DB_PASS'),
-            database=os.getenv('DB_NAME'),
-            cursorclass=pymysql.cursors.DictCursor
-        )
-
-        with connection.cursor() as cursor:
-            # Query to fetch all fields from od_applications table
-            query = "SELECT duration, od_days_required, od_dates, od_details, current_cgpa FROM od_applications"
-            cursor.execute(query)
-            od_applications = cursor.fetchall()
-
-        # Close the connection
-        connection.close()
-
-        # Render template with od_applications data
-        return render_template('od_status.html', od_applications=od_applications)
-
-    except Exception as e:
-        # Handle exceptions here
-        print("An error occurred:", str(e))
-        return f"<h1>Error</h1><p>{str(e)}</p>", 500
+    od_applications = ODApplication.query.all()
+    return render_template('od_status.html', od_applications=od_applications)
 
 @auth.route('/faculty_approvals')
 def faculty_approvals():
-    # Query database to fetch faculty approvals data
-    # For example:
-    # approvals = FacultyApproval.query.all()
-    # Pass the approvals data to the template
+    # Implement logic to fetch and display faculty approvals
     return render_template('faculty_approvals.html')
-
