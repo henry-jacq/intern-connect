@@ -153,6 +153,12 @@ def apply_od2():
 
         return redirect(url_for('index'))
 
+@views.route("/add_message", methods=["POST"])
+def add_message():
+    message = request.form["message"]
+    flash("OD details added successfully!")
+    return redirect(url_for("index"))
+
 @views.route('/profile')
 def profile():
     student = Students.query.filter_by(id=session['user']).first()

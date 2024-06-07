@@ -5,42 +5,36 @@ from .models import Students, ODApplication, Internship, Announcements
 
 admin = Blueprint('admin', __name__)
 
-@admin.before_request
-def check_auth():
-    if 'user' not in session:
-        return redirect(url_for('auth.login'))
+# @admin.before_request
+# def check_auth():
+#     if 'user' not in session:
+#         return redirect(url_for('auth.login'))
 
-@admin.route("/add_message", methods=["POST"])
-def add_message():
-    message = request.form["message"]
-    flash("OD details added successfully!")
-    return redirect(url_for("index"))
-
-@admin.route('/admin_reports', methods=['GET'])
-def admin_reports():
+@admin.route('/reports', methods=['GET'])
+def reports():
     total_internships = Internship.query.count()
     active_internships = Internship.query.filter_by(internship_status='Active').count()
     completed_internships = Internship.query.filter_by(internship_status='Completed').count()
 
-    return render_template("admin/admin_reports.html", 
+    return render_template("admin/reports.html", 
                            total_internships=total_internships, 
                            active_internships=active_internships, 
                            completed_internships=completed_internships)
     
-@admin.route('/admin_dashboard', methods=['GET'])
-def admin_dashboard():
+@admin.route('/dashboard')
+def dashboard():
     total_internships = Internship.query.count()
     total_students = Students.query.count()
     active_internships = Internship.query.filter_by(internship_status='Active').count()
     completed_internships = Internship.query.filter_by(internship_status='Completed').count()
 
-    return render_template('admin/admin_dash.html', 
+    return render_template('admin/dashboard.html', 
                            total_internships=total_internships, 
                            total_students=total_students, 
                            active_internships=active_internships, 
                            completed_internships=completed_internships)
 
-@admin.route('/admin/create/announcement', methods=['GET', 'POST'])
+@admin.route('/create/announcement', methods=['GET', 'POST'])
 def create_announcement():
     if request.method == 'POST':
         title = request.form.get("title")
@@ -52,3 +46,9 @@ def create_announcement():
         
         return render_template('admin/announcement.html', msg=True)
     return render_template('admin/announcement.html', msg=False)
+
+@admin.route('/logout')
+def logout():
+    if session.get('user'):
+        session.clear()
+    return redirect(url_for('auth.login'))

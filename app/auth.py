@@ -22,13 +22,14 @@ def login():
         flash('Invalid credentials')
     return render_template("login.html")
 
-@auth.route('/admin_login', methods=['GET', 'POST'])
+@auth.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
         email = request.form.get("email")
         password = request.form.get("password")
-        # Add authentication logic
-    return render_template("admin/admin_login.html")
-
-
+        
+        if email == 'admin@gmail.com' and password == '123':
+            session['admin'] = True
+            return redirect(url_for('admin.dashboard'))
+    return render_template("admin/login.html")
 

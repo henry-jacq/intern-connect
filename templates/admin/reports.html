@@ -68,7 +68,7 @@
             <button class="btn sidebar-toggler me-auto ms-md-5 d-md-none">
                 <i class="bi bi-list-nested"></i>
             </button>
-            <a role="button" class="text-body-emphasis" href="#">
+            <a role="button" class="text-body-emphasis" href="{{url_for('admin.logout')}}">
                 <i class="bi bi-box-arrow-left me-md-1"></i>
                 <span class="d-none d-md-inline-block">Logout</span>
             </a>
@@ -80,19 +80,19 @@
             <p class="text-uppercase fw-semibold text-secondary small mb-2 pt-2">Admin Panel</p>
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
-                    <a href="/admin_dashboard" class="nav-link rounded-4 text-body" aria-current="page">
+                    <a href="{{url_for('admin.dashboard')}}" class="nav-link rounded-4 text-body" aria-current="page">
                         <i class="bi bi-speedometer2 me-2"></i>
                         Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin_reports" class="nav-link rounded-4 active">
+                    <a href="{{url_for('admin.reports')}}" class="nav-link rounded-4 active">
                         <i class="bi bi-file-text me-2"></i>
                         Generate Reports
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/create/announcement" class="nav-link rounded-4 text-body">
+                    <a href="{{url_for('admin.create_announcement')}}" class="nav-link rounded-4 text-body">
                         <i class="bi bi-megaphone me-2"></i>
                         Create Announcement
                     </a>
