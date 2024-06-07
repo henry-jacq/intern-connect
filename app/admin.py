@@ -5,6 +5,11 @@ from .models import Students, ODApplication, Internship, Announcements
 
 admin = Blueprint('admin', __name__)
 
+@admin.before_request
+def check_auth():
+    if 'user' not in session:
+        return redirect(url_for('auth.login'))
+
 @admin.route("/add_message", methods=["POST"])
 def add_message():
     message = request.form["message"]

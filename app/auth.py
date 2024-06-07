@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .extensions import db
-from .models import Students, ODApplication, Internship, Announcements
+from .models import Students
 
 auth = Blueprint('auth', __name__)
 
@@ -17,8 +16,8 @@ def login():
         password = request.form.get("password")
         student = Students.query.filter_by(digital_id=digital_id).first()
         
-        if student and check_password_hash(student.password, password):
-            session['user'] = True
+        if student and student.password == password:
+            session['user'] = student.id
             return redirect(url_for('views.home'))
         flash('Invalid credentials')
     return render_template("login.html")
@@ -31,7 +30,5 @@ def admin_login():
         # Add authentication logic
     return render_template("admin/admin_login.html")
 
-@auth.route('/logout', methods=['GET', 'POST'])
-def logout():
-    session.pop('user')
+
 
