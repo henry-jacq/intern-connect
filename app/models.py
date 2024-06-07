@@ -4,11 +4,18 @@ class Students(db.Model):
     __tablename__ = 'students'
     
     id = db.Column(db.Integer, primary_key=True)
-    digital_id = db.Column(db.Integer)
+    digital_id = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(255))
+    reg_no = db.Column(db.String(255))
     password = db.Column(db.String(255))
-    reg_no = db.Column(db.Integer)
     email = db.Column(db.String(255))
+    secondary_email = db.Column(db.String(255), nullable=True)
+    phone_no = db.Column(db.String(255))
+    whatsapp_no = db.Column(db.String(255), nullable=True)
+    department = db.Column(db.String(255))
+    batch = db.Column(db.String(32))
+    mentor = db.Column(db.String(32))
+
 
 class Internship(db.Model):
     __tablename__ = 'internships'

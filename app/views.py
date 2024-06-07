@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from .models import Internship, Announcements, ODApplication
+from .models import Students, Internship, Announcements, ODApplication
 from datetime import datetime
 from .extensions import db
 import os, re
@@ -14,9 +14,10 @@ def check_auth():
 
 @views.route('/')
 def home():
+    student = Students.query.filter_by(id=session['user']).first()
     query = Announcements.query.all()
     anc_list = [{'title': anc.title, 'content': anc.content} for anc in query]
-    return render_template('index.html', announce=anc_list)
+    return render_template('index.html', announce=anc_list, student=student)
 
 @views.route('/internship/add', methods=['GET', 'POST'])
 def intern_add():
@@ -154,7 +155,8 @@ def apply_od2():
 
 @views.route('/profile')
 def profile():
-    return render_template('profile.html')
+    student = Students.query.filter_by(id=session['user']).first()
+    return render_template('profile.html', student=student)
 
 @views.route('/logout')
 def logout():

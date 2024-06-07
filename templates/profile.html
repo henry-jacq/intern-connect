@@ -43,58 +43,64 @@
     </nav>
 
     <div class="container">
-        <h3 class="fw-normal fs-3 mt-4">My Profile</h3>
-        <hr class="m-0">
+        <div class="my-4">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb border p-3 rounded">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-body">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="/profile" class="text-decoration-none">My Profile</a></li>
+                </ol>
+            </nav>
+        </div>
         <div class="bg-body-tertiary border border-tertiary rounded mt-3 p-5 mb-5">
             <div class="row g-3">
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Digital ID: <span class="fw-normal">2210933</span>
+                        Digital ID: <span class="fw-normal">{{student.digital_id}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Name: <span class="fw-normal">Henry</span>
+                        Name: <span class="fw-normal">{{student.name}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Register Number: <span class="fw-normal">31222226458</span>
+                        Register Number: <span class="fw-normal">{{student.reg_no}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Department: <span class="fw-normal">Information Technology</span>
+                        Department: <span class="fw-normal">{{student.department}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Phone: <span class="fw-normal">+91 9638392682</span>
+                        Phone: <span class="fw-normal">{{student.phone_no}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Whatsapp Number: <span class="fw-normal">+91 5554122227</span>
+                        Whatsapp Number: <span class="fw-normal">{{student.whatsapp_no}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Email: <span class="fw-normal">henry2210933@ssn.edu.in</span>
+                        Email: <span class="fw-normal">{{student.email}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Alternate Email: <span class="fw-normal">henry2210933@ssn.edu.in</span>
+                        Alternate Email: <span class="fw-normal">{{student.secondary_email}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Mentor: <span class="fw-normal">John Doe</span>
+                        Mentor: <span class="fw-normal">{{student.mentor}}</span>
                     </p>
                 </div>
                 <div class="col-sm-6 py-sm-2">
                     <p class="form-label fs-5 fw-semibold mb-0">
-                        Batch: <span class="fw-normal">2022-2026</span>
+                        Batch: <span class="fw-normal">{{student.batch}}</span>
                     </p>
                 </div>
             </div>
