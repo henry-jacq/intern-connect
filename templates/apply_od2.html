@@ -35,12 +35,12 @@
                     <a role="button" class="btn btn-sm btn-primary">Add Internship</a>
                     </li> -->
                     <li class="nav-item my-3 me-3">
-                        <a class="link-body-emphasis text-decoration-none" href="/profile">
+                        <a class="link-body-emphasis text-decoration-none" href="{{url_for('views.profile')}}">
                             <div class="d-none"></div>
                             My Profile</a>
                     </li>
                     <li class="nav-item my-3 me-3">
-                        <a class="link-body-emphasis text-decoration-none" href="/logout">Logout</a>
+                        <a class="link-body-emphasis text-decoration-none" href="{{url_for('views.logout')}}">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -51,8 +51,9 @@
         <div class="my-4">
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb border p-3 rounded">
-                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-body">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><a href="/od/apply" class="text-decoration-none">Apply OD</a></li>
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none link-body-emphasis">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="{{url_for('views.select_intern')}}" class="text-decoration-none link-body-emphasis">Select Intern</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="{{url_for('views.apply_od')}}" class="text-decoration-none">Apply OD</a></li>
                 </ol>
             </nav>
         </div>

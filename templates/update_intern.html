@@ -30,12 +30,12 @@
                     <a role="button" class="btn btn-sm btn-primary">Add Internship</a>
                     </li> -->
                     <li class="nav-item my-3 me-3">
-                        <a class="link-body-emphasis text-decoration-none" href="/profile">
+                        <a class="link-body-emphasis text-decoration-none" href="{{url_for('views.profile')}}">
                             <div class="d-none"></div>
                             My Profile</a>
                     </li>
                     <li class="nav-item my-3 me-3">
-                        <a class="link-body-emphasis text-decoration-none" href="/logout">Logout</a>
+                        <a class="link-body-emphasis text-decoration-none" href="{{url_for('views.logout')}}">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -46,8 +46,8 @@
         <div class="my-4">
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb border p-3 rounded">
-                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-body">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><a href="/internship/update" class="text-decoration-none">Update Intern</a></li>
+                    <li class="breadcrumb-item"><a href="{{url_for('views.home')}}" class="text-decoration-none link-body-emphasis">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="{{url_for('views.update_intern')}}" class="text-decoration-none">Update Intern</a></li>
                 </ol>
             </nav>
         </div>
@@ -57,9 +57,9 @@
             <div class="mb-3">
                 <label for="internMode" class="form-label">Select Internship</label>
                 <select class="form-select" id="internMode" aria-label="Default None">
-                    <option value="company1">Google</option>
-                    <option value="company2">Amazon</option>
-                    <option value="company3">Meta</option>
+                    <option value="google">Google</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="meta">Meta</option>
                 </select>
             </div>
             <div class="mb-3">

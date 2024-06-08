@@ -60,8 +60,8 @@ def update_intern():
     return render_template('update_intern.html')
 
 
-@views.route('/od/apply', methods=['GET', 'POST'])
-def apply_od():
+@views.route('/od/select_intern', methods=['GET', 'POST'])
+def select_intern():
     if request.method == 'POST':
         duration = request.form['duration']
         od_days_required = request.form['od_days_required']
@@ -84,8 +84,8 @@ def apply_od():
 
     return render_template('apply_od.html')
 
-@views.route('/od/select_intern', methods=['GET', 'POST'])
-def select_intern():
+@views.route('/od/apply', methods=['GET', 'POST'])
+def apply_od():
     duration = None
     od_days_required=None
 
