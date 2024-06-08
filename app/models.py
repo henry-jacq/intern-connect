@@ -14,7 +14,7 @@ class Students(db.Model):
     whatsapp_no = db.Column(db.String(255), nullable=True)
     department = db.Column(db.String(255))
     batch = db.Column(db.String(32))
-    mentor = db.Column(db.String(32))
+   
 
 
 class Internship(db.Model):
@@ -53,3 +53,27 @@ class Announcements(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     content = db.Column(db.String(255))
+
+
+class Teacher(db.Model):
+    __tablename__ = 'teacher'
+
+    id = db.Column(db.Integer, primary_key=True)
+    digital_id = db.Column(db.Integer, unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    phone_no = db.Column(db.String(20), nullable=False)
+    department = db.Column(db.String(100), nullable=False)
+    position = db.Column(db.String(100), nullable=False)
+
+
+teacher_students = db.Table('teacher_students',
+    db.Column('teacher_id', db.Integer, db.ForeignKey('teacher.id'), primary_key=True),
+    db.Column('students_id', db.Integer, db.ForeignKey('students.id'), primary_key=True)
+)
+
+# Establish relationships
+Teacher.students = db.relationship('Students', secondary=teacher_students, backref=db.backref('teachers', lazy='dynamic'))
+
+
