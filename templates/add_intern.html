@@ -53,14 +53,18 @@
         </div>
         <h3 class="fw-normal fs-4 mt-4">Add Internship</h3>
         <hr class="m-0">
-        {% if msg == True: %}
-            <div class="alert alert-success alert-dismissible my-3 fade show" role="alert">
-                <i class="bi bi-check-circle me-2"></i>
-                Internship added!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-        <form method="POST" action="/internship/add" class="form-control border-0 p-0 mt-3 mb-5">
+        {% with messages = get_flashed_messages('success') %}
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="alert alert-{{message[0]}} alert-dismissible my-3 fade show" role="alert">
+                        <i class="bi bi-check2-circle me-2"></i>
+                        {{message[1]}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {%endfor%}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="/internship/add" enctype="multipart/form-data" class="form-control border-0 p-0 mt-3 mb-5">
             <div class="row g-3 my-3">
                 <div class="col-md-6">
                     <label for="orgName" class="form-label">Name of Organization</label>
@@ -137,7 +141,7 @@
             </div>
             <div class="mb-3">
                 <label for="offerLetter" class="form-label">Offer letter (PDF)</label>
-                <input class="form-control" type="file" id="offerLetter">
+                <input class="form-control" type="file" name="offer_letter" id="offerLetter" accept=".pdf">
             </div>
             <div class="mt-4 mb-3">
                 <button class="btn btn-success">Add Internship</button>

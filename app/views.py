@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from .models import Students, Internship, Announcements, ODApplication,Teacher
 from datetime import datetime
-from .extensions import db
 import os, re
+from .extensions import db, upload_path, get_random_filename
 
 views = Blueprint('views', __name__)
-UPLOAD_PATH = os.path.join(os.path.abspath(os.path.join(os.getcwd())), 'uploads')
 
 @views.before_request
 def check_auth():
@@ -29,11 +28,20 @@ def teacher_home():
 
 @views.route('/internship/add', methods=['GET', 'POST'])
 def intern_add():
-    if request.method == 'POST':
-        # Retrieve digital ID from session
-        digital_id = session.get('digital_id')
+    student = Students.query.filter_by(id=session['user']).first()
 
+    if request.method == 'POST':
+      
+        # Handling file uploads
+        if 'offer_letter' in request.files:
+            file = request.files['offer_letter']
+            if file and file.filename:
+                filename = get_random_filename(file.filename)
+                file_path = os.path.join(upload_path, filename)
+                file.save(file_path)
+        
         form_data = {
+            "digital_id": session['digital_id'],
             "org_name": request.form.get("org_name"),
             "org_address": request.form.get("org_address"),
             "org_website": request.form.get("org_website"),
@@ -43,29 +51,20 @@ def intern_add():
             "end_date": datetime.strptime(request.form.get("end_date"), '%Y-%m-%d'),
             "internship_mode": request.form.get("internship_mode"),
             "stipend": request.form.get("stipend"),
-            "stipend_amount": request.form.get("stipend_amount"),
+            "stipend_amount": request.form.get("stipend_amount") or None,
             "ppo": request.form.get("ppo"),
             "internship_status": request.form.get("internship_status"),
-            "digital_id": digital_id  # Digital ID from session
-
+            "offer_letter": filename or None
         }
-
+        
         internship = Internship(**form_data)
-
-        for file_key in ['offer_letter', 'completion_letter']:
-            if file_key in request.files:
-                file = request.files[file_key]
-                if file and file.filename:
-                    filename = file.filename
-                    file.save(os.path.join(UPLOAD_PATH, filename))
-                    setattr(internship, file_key, filename)
 
         db.session.add(internship)
         db.session.commit()
         flash('Internship added successfully!', 'success')
-        return redirect(url_for('views.home'))
+        return redirect(request.url)
 
-    return render_template('add_intern.html')
+    return render_template('add_intern.html', student=student)
 
 @views.route('/internship/update')
 def update_intern():
