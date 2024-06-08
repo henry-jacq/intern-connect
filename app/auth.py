@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import Students
+from .models import Students,Teacher
 
 auth = Blueprint('auth', __name__)
 
@@ -36,3 +36,16 @@ def admin_login():
             return redirect(url_for('admin.dashboard'))
     return render_template("admin/login.html")
 
+@auth.route('/teacher-login', methods=['GET', 'POST'])
+def teacher_login():
+    if request.method == 'POST':
+        digital_id = int(request.form.get("digital_id"))
+        password = request.form.get("password")
+        teacher = Teacher.query.filter_by(digital_id=digital_id).first()
+        
+        if teacher and teacher.password == password:
+            session['user'] = teacher.id
+            session['digital_id'] = digital_id
+            return redirect(url_for('views.teacher_home'))
+        flash('Invalid credentials')
+    return render_template("teacher_login.html")
