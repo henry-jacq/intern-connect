@@ -14,6 +14,8 @@ def create_app():
     db_name = os.getenv('DB_NAME')
     db_host = os.getenv('DB_HOST')
 
+    app.url_map.strict_slashes = False
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{user}:{passwd}@{db_host}/{db_name}"
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'hhh123')
 

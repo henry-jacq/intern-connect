@@ -64,7 +64,7 @@
                 {%endfor%}
             {% endif %}
         {% endwith %}
-        <form method="POST" action="/internship/add" enctype="multipart/form-data" class="form-control border-0 p-0 mt-3 mb-5">
+        <form method="POST" action="{{url_for('views.intern_add')}}" enctype="multipart/form-data" class="form-control border-0 p-0 mt-3 mb-5">
             <div class="row g-3 my-3">
                 <div class="col-md-6">
                     <label for="orgName" class="form-label">Name of Organization</label>

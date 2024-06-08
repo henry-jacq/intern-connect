@@ -41,7 +41,7 @@
             </div>
         </div>
     </nav>
-    
+
     <div class="container">
         <div class="my-4">
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -53,35 +53,39 @@
         </div>
         <h3 class="fw-normal fs-4 mt-4">Update Internship</h3>
         <hr class="m-0">
-        <form class="form-control border-0 p-0 mt-3 mb-5">
-            <div class="mb-3">
-                <label for="internMode" class="form-label">Select Internship</label>
-                <select class="form-select" id="internMode" aria-label="Default None">
-                    <option value="google">Google</option>
-                    <option value="amazon">Amazon</option>
-                    <option value="meta">Meta</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="orgStipend" class="form-label">PPO   (Yes/No)</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="stipendRadioYes" value="option1" checked>
-                    <label class="form-check-label" for="stipendRadioYes">Yes</label>
+        {% if internships|length > 0 %}
+            <form id="internshipForm" class="form-control border-0 p-0 mt-3 mb-5">
+                <p class="form-text">Select an Internship from the below list.</p>
+                <div class="mb-3">
+                    <label for="internMode" class="form-label">My Internships</label>
+                    <select class="form-select" id="internMode" aria-label="Default None">
+                        <option value="" selected>None</option>
+                        {% for intern in internships %}
+                        <option value="{{ intern.id }}">{{ intern.org_name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="stipendRadioNo" value="option2">
-                    <label class="form-check-label" for="stipendRadioNo">No</label>
+                <div class="mt-4 mb-3">
+                    <button type="button" class="btn btn-success" onclick="redirectToUpdate()">Get Info</button>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="offerLetter" class="form-label">Completion letter (PDF)</label>
-                <input class="form-control" type="file" id="offerLetter">
-            </div>
-            <div class="mt-4 mb-3">
-                <button class="btn btn-success">Update Internship</button>
-                <button class="btn btn-secondary">Update & Lock</button>
-            </div>
-        </form>
+            </form>
+
+            <script type="text/javascript">
+                function redirectToUpdate() {
+                    var selectElement = document.getElementById('internMode');
+                    var internId = selectElement.value;
+                    if (internId) {
+                        window.location.href = "{{ url_for('views.update_intern') }}" + "/" + internId;
+                    } else {
+                        alert("Please select an internship.");
+                    }
+                }
+            </script>
+        {% else %}
+            <p class="text-secondary text-center py-5 fs-5 fw-normal"><i class="bi bi-exclamation-circle me-2"></i>No Internship Found!</p>
+            <p class="text-center">Add New Internship <a class="text-decoration-none" href="{{ url_for('views.intern_add') }}">Here</a>.</p>
+        {% endif %}
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

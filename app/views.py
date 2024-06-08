@@ -66,10 +66,15 @@ def intern_add():
 
     return render_template('add_intern.html', student=student)
 
-@views.route('/internship/update')
-def update_intern():
-    return render_template('update_intern.html')
-
+@views.route('/internship/update', defaults={'intern_id': None})
+@views.route('/internship/update/<int:intern_id>', methods=['GET', 'POST'])
+def update_intern(intern_id):
+    if intern_id is not None:
+        intern = Internship.query.filter_by(digital_id=session['digital_id'], id=intern_id).first_or_404()
+        return render_template('update_single_intern.html', intern_id=intern_id, data=intern)
+    else:
+        interns = Internship.query.filter_by(digital_id=session['digital_id']).all()
+        return render_template('update_intern.html', internships=interns)
 
 @views.route('/od/select_intern', methods=['GET', 'POST'])
 def select_intern():
