@@ -39,6 +39,8 @@ def intern_add():
                 filename = get_random_filename(file.filename)
                 file_path = os.path.join(upload_path, filename)
                 file.save(file_path)
+            else:
+                filename = None
         
         form_data = {
             "digital_id": session['digital_id'],
@@ -54,7 +56,7 @@ def intern_add():
             "stipend_amount": request.form.get("stipend_amount") or None,
             "ppo": request.form.get("ppo"),
             "internship_status": request.form.get("internship_status"),
-            "offer_letter": filename or None
+            "offer_letter": filename
         }
         
         internship = Internship(**form_data)
@@ -71,6 +73,43 @@ def intern_add():
 def update_intern(intern_id):
     if intern_id is not None:
         intern = Internship.query.filter_by(digital_id=session['digital_id'], id=intern_id).first_or_404()
+        if request.method == 'POST':
+            # Handling file uploads
+            filenames = {}
+            for file_type in ['completion_letter', 'offer_letter']:
+                if file_type in request.files:
+                    file = request.files[file_type]
+                    if file and file.filename:
+                        filename = get_random_filename(file.filename)
+                        file_path = os.path.join(upload_path, filename)
+                        file.save(file_path)
+                        filenames[file_type] = filename
+
+            intern = Internship.query.get(intern_id)
+
+            if intern:
+                # Update fields conditionally
+                intern.ppo = request.form.get("ppo") or intern.org_name
+                intern.internship_status = request.form.get("internship_status") or intern.internship_status
+                if filenames.get('completion_letter'):
+                    if intern.completion_letter is not None:
+                        path = os.path.join(upload_path, intern.completion_letter)
+                        if os.path.exists(path):
+                            os.remove(path)
+                    intern.completion_letter = filenames.get('completion_letter')
+                if filenames.get('offer_letter'):
+                    if intern.offer_letter is not None:
+                        path = os.path.join(upload_path, intern.offer_letter)
+                        if os.path.exists(path):
+                            os.remove(path)
+                    intern.offer_letter = filenames.get('offer_letter')
+
+                db.session.commit()
+                flash('Internship updated successfully!', 'success')
+            else:
+                flash('Internship not found.', 'danger')
+
+            return redirect(request.url)
         return render_template('update_single_intern.html', intern_id=intern_id, data=intern)
     else:
         interns = Internship.query.filter_by(digital_id=session['digital_id']).all()
