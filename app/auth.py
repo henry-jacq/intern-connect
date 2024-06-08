@@ -18,6 +18,9 @@ def login():
         
         if student and student.password == password:
             session['user'] = student.id
+            session['digital_id'] = digital_id
+            print(session)
+
             return redirect(url_for('views.home'))
         flash('Invalid credentials')
     return render_template("login.html")

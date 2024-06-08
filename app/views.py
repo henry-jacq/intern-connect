@@ -19,11 +19,14 @@ def home():
     anc_list = [{'title': anc.title, 'content': anc.content} for anc in query]
     return render_template('index.html', announce=anc_list, student=student)
 
+
 @views.route('/internship/add', methods=['GET', 'POST'])
 def intern_add():
     if request.method == 'POST':
+        # Retrieve digital ID from session
+        digital_id = session.get('digital_id')
+
         form_data = {
-            "digital_id": request.form.get("digital_id"),
             "org_name": request.form.get("org_name"),
             "org_address": request.form.get("org_address"),
             "org_website": request.form.get("org_website"),
@@ -35,7 +38,9 @@ def intern_add():
             "stipend": request.form.get("stipend"),
             "stipend_amount": request.form.get("stipend_amount"),
             "ppo": request.form.get("ppo"),
-            "internship_status": request.form.get("internship_status")
+            "internship_status": request.form.get("internship_status"),
+            "digital_id": digital_id  # Digital ID from session
+
         }
 
         internship = Internship(**form_data)
