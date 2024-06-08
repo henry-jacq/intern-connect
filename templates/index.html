@@ -1,124 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>InternConnect | Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+  </head>
 
-<body>
-
-    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow border-bottom py-2">
-        <div class="container-fluid">
-            <a class="navbar-brand fs-4 me-auto link-body-emphasis" href="/">
-                <img src="{{ url_for('static', filename='logo.svg') }}" width="38" class="d-inline-block align-text-top">
-                <div class="d-none d-md-inline-block">
-                    <span>InternConnect</span>
-                </div>
-            </a>
-            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary shadow border-bottom py-2"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand fs-4 me-auto link-body-emphasis" href="/">
+          <img
+            src="{{ url_for('static', filename='logo.svg') }}"
+            width="38"
+            class="d-inline-block align-text-top"
+          />
+          <div class="d-none d-md-inline-block">
+            <span>InternConnect</span>
+          </div>
+        </a>
+        <button
+          class="navbar-toggler collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarsExample09"
+          aria-controls="navbarsExample09"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
 
-            <div class="navbar-collapse collapse" id="navbarsExample09">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <!-- <li class="nav-item my-auto me-3">
+        <div class="navbar-collapse collapse" id="navbarsExample09">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <!-- <li class="nav-item my-auto me-3">
                         <a class="nav-link" href="#">Link</a>
                     <a role="button" class="btn btn-sm btn-primary">Add Internship</a>
                     </li> -->
-                    <li class="nav-item my-3 me-3">
-                        <a class="link-body-emphasis text-decoration-none" href="/profile">
-                            <div class="d-none"></div>
-                            My Profile</a>
-                    </li>
-                    <li class="nav-item my-3 me-3">
-                        <a class="link-body-emphasis text-decoration-none" href="/logout">Logout</a>
-                    </li>
-                </ul>
-            </div>
+            <li class="nav-item my-3 me-3">
+              <a
+                class="link-body-emphasis text-decoration-none"
+                href="/profile"
+              >
+                <div class="d-none"></div>
+                My Profile</a
+              >
+            </li>
+            <li class="nav-item my-3 me-3">
+              <a class="link-body-emphasis text-decoration-none" href="/logout"
+                >Logout</a
+              >
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container my-5">
-        <div class="p-5 bg-body-tertiary shadow rounded-3">
-            <h3 class="text-body-emphasis">Hello {{student.name}}! 👋</h3>
-            <p class="fs-4 lead">Welcome back to InternConnect at the SSN Campus!
-            </p>
-        </div>
+      <div class="p-5 bg-body-tertiary shadow rounded-3">
+        <h3 class="text-body-emphasis">Hello {{student.name}}! 👋</h3>
+        <p class="fs-4 lead">
+          Welcome back to InternConnect at the SSN Campus!
+        </p>
+      </div>
     </div>
 
     <div class="container">
-        <h3 class="fw-normal fs-4 mt-4">Categories</h3>
-        <hr>
-        <div class="row justify-content-center mb-3">
-            <div class="col-lg-6 mb-3">
-                <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
-                    <div class="card-body px-4">
-                        <div class="text-center">
-                            <h5 class="fw-normal">Add Internship</h5>
-                        </div>
-                        <a href="/internship/add" class="stretched-link"></a>
-                    </div>
-                </div>
+      <h3 class="fw-normal fs-4 mt-4">Categories</h3>
+      <hr />
+      <div class="row justify-content-center mb-3">
+        <div class="col-lg-6 mb-3">
+          <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
+            <div class="card-body px-4">
+              <div class="text-center">
+                <h5 class="fw-normal">Add Internship</h5>
+              </div>
+              <a href="/internship/add" class="stretched-link"></a>
             </div>
-            <div class="col-lg-6 mb-3">
-                <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
-                    <div class="card-body px-4">
-                        <div class="text-center">
-                            <h5 class="fw-normal">Update Internship</h5>
-                        </div>
-                        <a href="/internship/update" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
-                    <div class="card-body px-4">
-                        <div class="text-center">
-                            <h5 class="fw-normal">Apply OD</h5>
-                        </div>
-                        <a href="/od/apply" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
-                    <div class="card-body px-4">
-                        <div class="text-center">
-                            <h5 class="fw-normal">OD Status</h5>
-                        </div>
-                        <a href="/od/status" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-lg-6 mb-3">
+          <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
+            <div class="card-body px-4">
+              <div class="text-center">
+                <h5 class="fw-normal">Update Internship</h5>
+              </div>
+              <a href="/internship/update" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+          <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
+            <div class="card-body px-4">
+              <div class="text-center">
+                <h5 class="fw-normal">Apply OD</h5>
+              </div>
+              <a href="/od/apply" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+          <div class="card custom-card bg-body-tertiary h-100 border shadow-sm">
+            <div class="card-body px-4">
+              <div class="text-center">
+                <h5 class="fw-normal">OD Status</h5>
+              </div>
+              <a href="/od/status" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="container my-5">
-        <h3 class="fw-normal fs-4 mt-4">Announcements 🎉</h3>
-        <hr> {% for i in announce %}
-        <div class="card bg-body-tertiary shadow rounded-3 mb-3">
-            <div class="card-body">
-                <h5 class="card-title text-body-emphasis">{{i.title}}</h5>
-                <p class="card-text">{{i.content}}</p>
-                <a href="#" class="btn btn-sm btn-primary">Read More</a>
-            </div>
+      <h3 class="fw-normal fs-4 mt-4">Announcements 🎉</h3>
+      <hr />
+      {% if announce|length > 0 %} {% for i in announce %}
+      <div class="card bg-body-tertiary shadow rounded-3 mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-body-emphasis">{{i.title}}</h5>
+          <p class="card-text">{{i.content}}</p>
+          <a href="#" class="btn btn-sm btn-primary">Read More</a>
         </div>
-        {% endfor %}
+      </div>
+      {% endfor %} {% else %}
+      <p class="text-secondary text-center fs-5 py-5"><i class="bi bi-exclamation-circle"></i> No Announcements Created!</p>
+      {% endif %}
     </div>
-
 
     <div class="container">
-        <footer class="py-3 my-4 border-top">
-            <p class="text-center text-body-secondary">©2024 InternConnect | SSN College of Engineering</p>
-        </footer>
+      <footer class="py-3 my-4 border-top">
+        <p class="text-center text-body-secondary">
+          ©2024 InternConnect | SSN College of Engineering
+        </p>
+      </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
