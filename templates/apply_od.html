@@ -53,46 +53,38 @@
         </div>
         <h3 class="fw-normal fs-4 mt-5 ">Select Internship</h3>
         <hr class="m-0">
-        <p class="fs-6 py-3">Select one to update the internship details</label>
+        {% if internships|length > 0 %}
+            <p class="form-text py-3">Apply OD by selecting the Internship.</label>
             <div class="table-responsive">
                 <table class="table">
                     <thead class="px-0">
                         <tr>
                             <th scope="col " class="text-center ">Intern ID</th>
-                            <th scope="col " class="text-center ">Name of Organization</th>
-                            <th scope="col " class="text-center ">Mode of Internship</th>
+                            <th scope="col " class="text-center ">Organization</th>
+                            <th scope="col " class="text-center ">Intern Status</th>
+                            <th scope="col " class="text-center ">Mode of Intern</th>
                             <th scope="col " class="text-center ">Select Internship</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="text-center ">
-                            <th scope="row ">INT001</th>
-                            <td>Google</td>
-                            <td>On-site</td>
-                            <td>
-                                <a href="{{url_for('views.apply_od')}}" class="btn btn-primary btn-sm ">Select</button>
-                        </td>
-                    </tr>
-                    <tr class="text-center ">
-                        <th scope="row ">INT002</th>
-                        <td>Amazon</td>
-                        <td>Remote</td>
-                        <td>
-                            <a href="{{url_for('views.apply_od')}}" class="btn btn-primary btn-sm ">Select</button>
-                        </td>
-                    </tr>
-                    <tr class="text-center ">
-                        <th scope="row ">INT003</th>
-                        <td>Facebook</td>
-                        <td>Remote</td>
-                        <td>
-                            <a href="{{url_for('views.apply_od')}}" class="btn btn-primary btn-sm ">Select</button>
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
-        </div>
+                        {% for intern in internships %}
+                            <tr class="text-center ">
+                                <th scope="row ">{{intern.id}}</th>
+                                <td>{{intern.org_name}}</td>
+                                <td>{{intern.internship_status}}</td>
+                                <td>{{intern.internship_mode}}</td>
+                                <td>
+                                    <a href="{{url_for('views.apply_od', intern_id=intern.id)}}" class="btn btn-primary btn-sm ">Select</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-secondary text-center py-5 fs-5 fw-normal"><i class="bi bi-exclamation-circle me-2"></i>No Internship Found!</p>
+            <p class="text-center">Add New Internship <a class="text-decoration-none" href="{{ url_for('views.intern_add') }}">Here</a>.</p>
+        {% endif %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js "
