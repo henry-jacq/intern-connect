@@ -65,7 +65,7 @@
                 {%endfor%}
             {% endif %}
         {% endwith %}
-        <p class="form-label fw-semibold my-3">{{data.org_name|capitalize}} Intern Details</p>
+        <p class="form-label fw-semibold my-3">{{data.org_name|capitalize}} Details</p>
         <div class="px-2">
             <div class="row">
                 <div class="col-md-6">
@@ -139,19 +139,28 @@
                     <option value="Completed" {% if data.internship_status == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
             </div>
-
             {% if not data.offer_letter %}
                 <div class="mb-3">
                     <label for="offerLetter" class="form-label">Offer letter (PDF)</label>
                     <input class="form-control" type="file" name="offer_letter" id="offerLetter" accept=".pdf">
+                    <p class="form-text">You can't update the offer letter after uploading.</p>
                 </div>
             {% endif %}
             {% if not data.completion_letter %}
-                <div class="mb-3">
+                <div class="mt-3 mb-3">
                     <label for="completionLetter" class="form-label">Completion letter (PDF)</label>
                     <input class="form-control" type="file" name="completion_letter" id="completionLetter" accept=".pdf">
                     <p class="form-text">You can't update the completion letter after uploading.</p>
                 </div>
+            {% endif %}
+            {% if data.offer_letter or data.completion_letter %}
+                <p class="mb-2">My Attachments</p>
+                {% if data.offer_letter %}
+                    <a target="_blank" class="link-body-emphasis" href="{{ url_for('views.get_uploaded_file', filename=data.offer_letter) }}"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>Offer Letter</a><br>
+                {% endif %}
+                {% if data.completion_letter %}
+                    <a target="_blank" class="link-body-emphasis" href="{{ url_for('views.get_uploaded_file', filename=data.completion_letter) }}"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>Completion Letter</a><br>
+                {% endif %}
             {% endif %}
             <div class="mt-4 mb-3">
                 <button class="btn btn-success"><i class="bi bi-arrow-repeat me-2"></i>Update Intern</button>

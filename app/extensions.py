@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask import send_from_directory
 import os, time
 from werkzeug.utils import secure_filename
 
@@ -15,3 +16,6 @@ def get_random_filename(name):
     timestamp = str(int(time.time()))
     new_filename = f"{name}_{timestamp}{ext}"
     return new_filename
+
+def get_uploads(filename, path=upload_path):
+    return send_from_directory(path, filename)

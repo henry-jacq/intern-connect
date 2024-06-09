@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from .models import Students, Internship, Announcements, ODApplication,Teacher
 from datetime import datetime
 import os, re
-from .extensions import db, upload_path, get_random_filename
+from .extensions import db, upload_path, get_random_filename, get_uploads
 
 views = Blueprint('views', __name__)
 
@@ -184,6 +184,10 @@ def apply_od():
 def od_status():
     od_applications = ODApplication.query.all()
     return render_template('od_status.html', od_applications=od_applications)
+
+@views.route('/uploads/<filename>', methods=['GET'])
+def get_uploaded_file(filename):
+    return get_uploads(filename)
 
 @views.route('/faculty_approvals')
 def faculty_approvals():
