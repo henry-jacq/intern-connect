@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from .models import Students, Internship, Announcements, OnDuty,Teacher
+from .models import Students, Internship, Announcements, OnDuty, Faculty
 from datetime import datetime
 import os, re
 from .extensions import db, upload_path, get_random_filename, get_uploads
@@ -17,14 +17,6 @@ def home():
     query = Announcements.query.all()
     anc_list = [{'title': anc.title, 'content': anc.content} for anc in query]
     return render_template('index.html', announce=anc_list, student=student)
-
-@views.route('/teacher')
-def teacher_home():
-    teacher = Teacher.query.filter_by(id=session['user']).first()
-    query = Announcements.query.all()
-    anc_list = [{'title': anc.title, 'content': anc.content} for anc in query]
-    return render_template('teacher_index.html', announce=anc_list, teacher=teacher)
-
 
 @views.route('/internship/add', methods=['GET', 'POST'])
 def intern_add():

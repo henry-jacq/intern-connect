@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import Students,Teacher
+from .models import Students, Faculty
 
 auth = Blueprint('auth', __name__)
 
@@ -12,13 +12,13 @@ def check_user():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        digital_id = int(request.form.get("digital_id"))
+        digital_id = request.form.get("digital_id")
         password = request.form.get("password")
         student = Students.query.filter_by(digital_id=digital_id).first()
         
         if student and student.password == password:
             session['user'] = student.id
-            session['digital_id'] = digital_id
+            session['digital_id'] = int(digital_id)
             print(session)
 
             return redirect(url_for('views.home'))
@@ -36,16 +36,16 @@ def admin_login():
             return redirect(url_for('admin.dashboard'))
     return render_template("admin/login.html")
 
-@auth.route('/teacher-login', methods=['GET', 'POST'])
-def teacher_login():
+@auth.route('/faculty/login', methods=['GET', 'POST'])
+def faculty_login():
     if request.method == 'POST':
-        digital_id = int(request.form.get("digital_id"))
+        digital_id = request.form.get("digital_id")
         password = request.form.get("password")
-        teacher = Teacher.query.filter_by(digital_id=digital_id).first()
+        teacher = Faculty.query.filter_by(digital_id=digital_id).first()
         
         if teacher and teacher.password == password:
             session['user'] = teacher.id
-            session['digital_id'] = digital_id
-            return redirect(url_for('views.teacher_home'))
+            session['digital_id'] = int(digital_id)
+            return redirect(url_for('faculty.home'))
         flash('Invalid credentials')
-    return render_template("teacher_login.html")
+    return render_template("faculty/login.html")

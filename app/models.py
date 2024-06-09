@@ -57,8 +57,8 @@ class Announcements(db.Model):
     title = db.Column(db.String(255))
     content = db.Column(db.String(255))
 
-class Teacher(db.Model):
-    __tablename__ = 'teacher'
+class Faculty(db.Model):
+    __tablename__ = 'faculties'
 
     id = db.Column(db.Integer, primary_key=True)
     digital_id = db.Column(db.Integer, unique=True, nullable=False)
@@ -70,12 +70,12 @@ class Teacher(db.Model):
     position = db.Column(db.String(100), nullable=False)
 
 
-teacher_students = db.Table('teacher_students',
-    db.Column('teacher_id', db.Integer, db.ForeignKey('teacher.id'), primary_key=True),
+faculty_students = db.Table('faculty_students',
+    db.Column('faculty_id', db.Integer, db.ForeignKey('faculties.id'), primary_key=True),
     db.Column('students_id', db.Integer, db.ForeignKey('students.id'), primary_key=True)
 )
 
 # Establish relationships
-Teacher.students = db.relationship('Students', secondary=teacher_students, backref=db.backref('teachers', lazy='dynamic'))
+Faculty.students = db.relationship('Students', secondary=faculty_students, backref=db.backref('faculties', lazy='dynamic'))
 
 

@@ -3,6 +3,7 @@ import os
 from .auth import auth
 from .views import views
 from .admin import admin
+from .faculty import faculty
 from .extensions import db, upload_path
 
 
@@ -28,5 +29,6 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/admin')
+    app.register_blueprint(faculty, url_prefix='/faculty')
 
     return app
