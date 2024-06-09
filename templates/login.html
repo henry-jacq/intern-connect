@@ -27,7 +27,7 @@
                 <img class="img-fluid" src="{{ url_for('static', filename='teaching.svg') }}" alt="teaching.svg" width="500">
             </div>
             <div class="col col-lg-4">
-                <form class="user-login-form" method="post" action="{{url_for('auth.login')}}" autocomplete="off">
+                <form class="user-login-form" method="post" action="{{url_for('auth.login')}}">
                     <div class="form-control px-4 py-3 shadow-lg bg-opacity-25">
                         <h5 class="fw-semi-bold my-4"><i class="bi bi-people-fill me-2"></i>Student Login</h5>
                         {% with messages = get_flashed_messages('success') %}
