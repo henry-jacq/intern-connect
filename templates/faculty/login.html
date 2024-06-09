@@ -27,12 +27,17 @@
                 <form class="user-login-form" method="post" action="{{url_for('auth.faculty_login')}}" autocomplete="off">
                     <div class="form-control px-4 py-3 shadow-lg bg-opacity-25">
                         <h5 class="fw-semi-bold my-4"><i class="bi bi-person-lines-fill me-2"></i>Faculty Login</h5>
-                        {% if error: %}
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-triangle me-2"></i> Invalid Credentials
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        {% endif %}
+                        {% with messages = get_flashed_messages('success') %}
+                            {% if messages %}
+                                {% for message in messages%}
+                                    <div class="alert alert-{{message[0]}} alert-dismissible my-3 fade show" role="alert">
+                                        <i class="bi bi-check2-circle me-2"></i>
+                                        {{message[1]}}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {%endfor%}
+                            {% endif %}
+                        {% endwith %}
                         <label for="user" class="form-label">Digital ID</label>
                         <input type="text" id="user" name="digital_id" class="form-control mb-3" required="">
                         <label for="pass" class="form-label">Password</label>

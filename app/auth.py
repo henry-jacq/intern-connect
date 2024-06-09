@@ -19,10 +19,9 @@ def login():
         if student and student.password == password:
             session['user'] = student.id
             session['digital_id'] = int(digital_id)
-            print(session)
-
             return redirect(url_for('views.home'))
-        flash('Invalid credentials')
+            
+        flash('Invalid credentials', 'danger')
     return render_template("login.html")
 
 @auth.route('/admin/login', methods=['GET', 'POST'])
@@ -47,5 +46,6 @@ def faculty_login():
             session['user'] = teacher.id
             session['digital_id'] = int(digital_id)
             return redirect(url_for('faculty.home'))
-        flash('Invalid credentials')
+        flash('Invalid credentials', 'danger')
     return render_template("faculty/login.html")
+
