@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OD Details with Faculty Approvals</title>
+    <title>InternConnect | OD Status</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
@@ -49,44 +49,46 @@
                 </ol>
             </nav>
         </div>
+
         <h3 class="fw-normal fs-4 mt-5 ">OD Status</h3>
         <hr class="m-0 ">
-    
-    <div class="container py-5">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Duration</th>
-                    <th>OD days required</th>
-                    <th>OD Dates</th>
-                    <th>OD Details</th>
-                    <th>Current CGPA</th>
-                    <!-- Add more table headers for other details -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for od_application in od_applications %}
-                <tr>
-                    <td>{{ od_application['duration'] }}</td>
-                    <td>{{ od_application['od_days_required'] }}</td>
-                    <td>{{ od_application['od_dates'] }}</td>
-                    <td>{{ od_application['od_details'] }}</td>
-                    <td>{{ od_application['current_cgpa'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <!-- Button for Faculty Approval -->
-        <button class="btn btn-success approval-btn" onclick="redirectToFacultyApprovals()">Faculty Approvals</button>
+        
+        {% if od_applications|length > 0 %}
+        <div class="py-3">
+            <p class="form-text">Status of ODs you've applied.</p>
+            <table class="table">
+                <thead class="text-center">
+                    <tr>
+                        <th>Intern ID</th>
+                        <th>Source of Referral</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>CGPA</th>
+                        <th>Status</th>
+                        <!-- Add more table headers for other details -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for od_application in od_applications %}
+                    <tr class="text-center">
+                        <td><a class="text-decoration-none" href="{{url_for('views.update_intern', intern_id=od_application['internship_id'])}}">{{ od_application['internship_id'] }}</a></td>
+                        <td>{{ od_application['source_of_referral'] }}</td>
+                        <td>{{ od_application['start_date'] }}</td>
+                        <td>{{ od_application['end_date'] }}</td>
+                        <td>{{ od_application['current_cgpa'] }}</td>
+                        <td><span class="badge text-bg-secondary">Pending</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-secondary text-center py-5 fs-5 fw-normal"><i class="bi bi-exclamation-circle me-2"></i>No On-Duty Found!</p>
+            <p class="text-center">Apply New On-Duty <a class="text-decoration-none" href="{{ url_for('views.select_intern') }}">Here</a>.</p>
+        {% endif %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <!-- JavaScript function for Faculty Approval -->
-    <script>
-        function redirectToFacultyApprovals() {
-            window.location.href = '/faculty_approvals';
-        }
-    </script>
 </body>
 </html>

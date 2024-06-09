@@ -69,9 +69,9 @@
                     <div class="col-md-6 mb-3">
                         <label for="referral_source" class="form-label">Source of Referral</label>
                         <select name="referral_source" class="form-select" id="referral_source">
-                            <option value="cdc">Career Development Center</option>
-                            <option value="company">Company Website</option>
-                            <option value="others">Other Referrals</option>
+                            <option value="Career Development Center">Career Development Center</option>
+                            <option value="{{data.org_name|capitalize}}">Company Website</option>
+                            <option value="Other Referrals">Other Referrals</option>
                         </select>
                         <small class="form-text text-muted">Select the Source of Referral.</small>
                     </div>
