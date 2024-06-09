@@ -38,7 +38,6 @@ def admin_login():
         password = request.form.get("password")
         
         if email == 'admin@gmail.com' and password == '123':
-            session['admin'] = True
             session['user'] = True
             session['role'] = get_role_id('admin')
             return redirect(url_for('admin.dashboard'))
