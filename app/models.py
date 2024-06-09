@@ -47,6 +47,7 @@ class OnDuty(db.Model):
     end_date = db.Column(db.Date, nullable=False)
     reason = db.Column(db.String(255))
     current_cgpa = db.Column(db.Float)
+    status = db.Column(db.String(255))
     internship = db.relationship('Internship', backref=db.backref('on_duty', lazy=True))
 
 class Announcements(db.Model):

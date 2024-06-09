@@ -129,7 +129,8 @@ def apply_od(intern_id):
             "start_date": request.form.get("start_date"),
             "end_date": request.form.get("end_date"),
             "current_cgpa": float(request.form.get("current_cgpa")),
-            "reason": request.form.get("reason")
+            "reason": request.form.get("reason"),
+            "status": "Pending"
         }
 
         od = OnDuty(**form_data)
