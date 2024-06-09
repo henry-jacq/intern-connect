@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from .models import Students, Internship, Announcements, ODApplication,Teacher
+from .models import Students, Internship, Announcements, OnDuty,Teacher
 from datetime import datetime
 import os, re
 from .extensions import db, upload_path, get_random_filename, get_uploads
@@ -115,40 +115,35 @@ def update_intern(intern_id):
         interns = Internship.query.filter_by(digital_id=session['digital_id']).all()
         return render_template('update_intern.html', internships=interns)
 
-@views.route('/od/select_intern', methods=['GET', 'POST'])
+@views.route('/od/select_intern', methods=['GET'])
 def select_intern():
-    if request.method == 'POST':
-        duration = request.form['duration']
-        od_days_required = request.form['od_days_required']
-        od_date_range = request.form['od_dates']
-        od_details = request.form['od_details']
-        current_cgpa = request.form['current_cgpa']
-
-        pattern = r'(?P<m_start>\d{2})/(?P<d_start>\d{2})/(?P<y_start>\d{4})-(?P<m_end>\d{2})/(?P<d_end>\d{2})/(?P<y_end>\d{4})'
-        match = re.match(pattern, od_date_range)
-        if match:
-            start_date = datetime(int(match.group('y_start')), int(match.group('m_start')), int(match.group('d_start')))
-            end_date = datetime(int(match.group('y_end')), int(match.group('m_end')), int(match.group('d_end')))
-            od_dates = f"{start_date.strftime('%Y-%m-%d')} - {end_date.strftime('%Y-%m-%d')}"
-            od_application = ODApplication(duration=duration, od_days_required=od_days_required, od_dates=od_dates, od_details=od_details, current_cgpa=current_cgpa)
-
-            db.session.add(od_application)
-            db.session.commit()
-            flash('OD details added successfully!', 'success')
-            return redirect(url_for('views.home'))
-
     interns = Internship.query.filter_by(digital_id=session['digital_id']).all()
     return render_template('apply_od.html', internships=interns)
 
 @views.route('/od/apply/<int:intern_id>', methods=['GET', 'POST'])
 def apply_od(intern_id):
+    if request.method == 'POST':
+        form_data = {
+            "internship_id": intern_id,
+            "source_of_referral": request.form.get("referral_source"),
+            "start_date": request.form.get("start_date"),
+            "end_date": request.form.get("end_date"),
+            "current_cgpa": float(request.form.get("current_cgpa")),
+            "reason": request.form.get("reason")
+        }
+
+        od = OnDuty(**form_data)
+        db.session.add(od)
+        db.session.commit()
+        flash('OD submitted successfully!','success')
+        
     intern = Internship.query.filter_by(digital_id=session['digital_id'], id=intern_id).first_or_404()
     return render_template('apply_od2.html', intern_id=intern_id, data=intern)
 
 @views.route('/od/status', methods=['GET'])
 def od_status():
-    od_applications = ODApplication.query.all()
-    return render_template('od_status.html', od_applications=od_applications)
+    data = OnDuty.query.all()
+    return render_template('od_status.html', od_applications=data)
 
 @views.route('/uploads/<filename>', methods=['GET'])
 def get_uploaded_file(filename):

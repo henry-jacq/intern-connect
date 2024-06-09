@@ -37,15 +37,17 @@ class Internship(db.Model):
     offer_letter = db.Column(db.String(255))
     completion_letter = db.Column(db.String(255))
 
-class ODApplication(db.Model):
-    __tablename__ = 'od_applications'
+class OnDuty(db.Model):
+    __tablename__ = 'on_duty'
 
     id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.Integer)
-    od_days_required = db.Column(db.Integer)
-    od_dates = db.Column(db.String(100))
-    od_details = db.Column(db.String(255))
+    internship_id = db.Column(db.Integer, db.ForeignKey('internships.id'))
+    source_of_referral = db.Column(db.String(255))
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    reason = db.Column(db.String(255))
     current_cgpa = db.Column(db.Float)
+    internship = db.relationship('Internship', backref=db.backref('on_duty', lazy=True))
 
 class Announcements(db.Model):
     __tablename__ = 'announcements'
@@ -53,7 +55,6 @@ class Announcements(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     content = db.Column(db.String(255))
-
 
 class Teacher(db.Model):
     __tablename__ = 'teacher'
