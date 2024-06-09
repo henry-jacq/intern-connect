@@ -19,3 +19,15 @@ def get_random_filename(name):
 
 def get_uploads(filename, path=upload_path):
     return send_from_directory(path, filename)
+
+def get_role_id(name):
+    roles = {
+        'user': 1,
+        'admin': 2,
+        'faculty': 3
+    }
+
+    if name.lower() in roles.keys():
+        return roles.get(name.lower())
+    else:
+        return False

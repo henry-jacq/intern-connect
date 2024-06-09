@@ -2,13 +2,15 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from .models import Students, Internship, Announcements, OnDuty, Faculty
 from datetime import datetime
 import os, re
-from .extensions import db, upload_path, get_random_filename, get_uploads
+from .extensions import db, upload_path, get_random_filename, get_uploads, get_role_id
 
 views = Blueprint('views', __name__)
 
 @views.before_request
-def check_auth():
+def check_user():
     if 'user' not in session:
+        return redirect(url_for('auth.login'))
+    if session['role'] != get_role_id('user'):
         return redirect(url_for('auth.login'))
 
 @views.route('/')
@@ -178,6 +180,5 @@ def profile():
 
 @views.route('/logout')
 def logout():
-    if session.get('user'):
-        session.pop('user')
+    session.clear()
     return redirect(url_for('auth.login'))

@@ -1,14 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .extensions import db
+from .extensions import db, get_role_id
 from .models import Students, Internship, Announcements
 
 admin = Blueprint('admin', __name__)
 
-# @admin.before_request
-# def check_auth():
-#     if 'user' not in session:
-#         return redirect(url_for('auth.login'))
+@admin.before_request
+def check_user():
+    if 'role' not in session:
+        return redirect(url_for('auth.admin_login'))
+    if session['role'] != get_role_id('admin'):
+        return redirect(url_for('auth.admin_login'))
 
 @admin.route('/reports', methods=['GET'])
 def reports():
@@ -49,6 +51,5 @@ def create_announcement():
 
 @admin.route('/logout')
 def logout():
-    if session.get('user'):
-        session.clear()
-    return redirect(url_for('auth.login'))
+    session.clear()
+    return redirect(url_for('auth.admin_login'))
