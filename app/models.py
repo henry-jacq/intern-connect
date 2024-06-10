@@ -79,3 +79,15 @@ faculty_students = db.Table('faculty_students',
 Faculty.students = db.relationship('Students', secondary=faculty_students, backref=db.backref('faculties', lazy='dynamic'))
 
 
+class OdRequest(db.Model):
+    __tablename__ = 'od_requests'
+
+    id = db.Column(db.Integer, primary_key=True)
+    on_duty_id = db.Column(db.Integer, db.ForeignKey('on_duty.id'))
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculties.id'))
+    status = db.Column(db.String(255), default='Pending')  # 'Pending', 'Accepted', 'Rejected'
+
+    on_duty = db.relationship('OnDuty', backref=db.backref('od_requests', lazy=True))
+    faculty = db.relationship('Faculty', backref=db.backref('od_requests', lazy=True))
+
+

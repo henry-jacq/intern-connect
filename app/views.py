@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from .models import Students, Internship, Announcements, OnDuty, Faculty
+from .models import Students, Internship, Announcements, OnDuty, Faculty,OdRequest
 from datetime import datetime
 import os, re
 from .extensions import db, upload_path, get_random_filename, get_uploads, get_role_id
@@ -131,6 +131,15 @@ def apply_od(intern_id):
         db.session.add(od)
         db.session.commit()
         flash('OD submitted successfully!','success')
+
+        student_id = session['user']
+        student = Students.query.get(student_id)
+        for faculty in student.faculties:
+            new_request = OdRequest(on_duty_id=od.id, faculty_id=faculty.id)
+            db.session.add(new_request)
+
+        db.session.commit()
+        flash('OD request submitted successfully!', 'success')
         
     intern = Internship.query.filter_by(digital_id=session['digital_id'], id=intern_id).first_or_404()
     return render_template('apply_od2.html', intern_id=intern_id, data=intern)
