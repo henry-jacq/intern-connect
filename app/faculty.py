@@ -42,9 +42,25 @@ def add_students():
     students = Students.query.all()
     return render_template("faculty/add_students.html", faculty=faculty, students=students)
 
-@faculty.route('/od/requests')
-def od_requests():
-    pass
+
+
+@faculty.route('/students', methods=['GET'])
+def view_students():
+    if 'user' not in session:
+        return redirect(url_for('auth.login'))
+
+    faculty_id = session['user']
+    
+    # Query to get all students related to the logged-in faculty
+    students = (db.session.query(Students)
+                .join(faculty_students, faculty_students.c.students_id == Students.id)
+                .filter(faculty_students.c.faculty_id == faculty_id)
+                .all())
+    
+    return render_template('faculty/students.html', students=students)
+
+
+
 
 @faculty.route('/od_requests', methods=['GET'])
 def od_requests_page():
@@ -63,15 +79,6 @@ def od_requests_page():
 
     return render_template('faculty/od_requests.html', requests=requests)
 
-@faculty.route('/profile')
-def profile():
-    # Implement profile view
-    return render_template('profile.html')
-
-@faculty.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('auth.faculty_login'))
 
 @faculty.route('/api/od_requests', methods=['GET'])
 def get_od_requests():
@@ -136,3 +143,16 @@ def check_and_update_on_duty_status(on_duty_id):
     else:
         on_duty.status = 'pending'
     db.session.commit()
+
+
+@faculty.route('/profile')
+def profile():
+    # Implement profile view
+    return render_template('profile.html')
+
+
+@faculty.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('auth.faculty_login'))
+
