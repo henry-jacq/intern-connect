@@ -145,10 +145,18 @@ def check_and_update_on_duty_status(on_duty_id):
     db.session.commit()
 
 
-@faculty.route('/profile')
-def profile():
-    # Implement profile view
-    return render_template('profile.html')
+
+@faculty.route('/profile', methods=['GET'])
+def faculty_profile():
+    if 'user' not in session:
+        return redirect(url_for('auth.faculty_login'))
+
+    faculty_id = session['user']
+    
+    # Query to get the logged-in faculty's details
+    faculty = Faculty.query.filter_by(id=faculty_id).first()
+    
+    return render_template('faculty/profile.html', faculty=faculty)
 
 
 @faculty.route('/logout')
