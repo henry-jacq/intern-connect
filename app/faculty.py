@@ -80,7 +80,7 @@ def od_requests_page():
     return render_template('faculty/od_requests.html', requests=requests)
 
 
-@faculty.route('/api/od_requests', methods=['GET'])
+@faculty.route('/api/od_requests', methods=['GET', 'POST'])
 def get_od_requests():
     if 'user' not in session:
         return jsonify({'success': False, 'message': 'Unauthorized'}), 401

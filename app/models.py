@@ -41,13 +41,15 @@ class OnDuty(db.Model):
     __tablename__ = 'on_duty'
 
     id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     internship_id = db.Column(db.Integer, db.ForeignKey('internships.id'))
     source_of_referral = db.Column(db.String(255))
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     reason = db.Column(db.String(255))
     current_cgpa = db.Column(db.Float)
-    status = db.Column(db.String(255))
+    status = db.Column(db.String(255), default="Pending")
+    student = db.relationship('Students', backref=db.backref('on_duty', lazy=True))
     internship = db.relationship('Internship', backref=db.backref('on_duty', lazy=True))
 
 class Announcements(db.Model):

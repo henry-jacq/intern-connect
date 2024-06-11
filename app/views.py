@@ -118,19 +118,18 @@ def select_intern():
 def apply_od(intern_id):
     if request.method == 'POST':
         form_data = {
+            "student_id": session['user'],
             "internship_id": intern_id,
             "source_of_referral": request.form.get("referral_source"),
             "start_date": request.form.get("start_date"),
             "end_date": request.form.get("end_date"),
             "current_cgpa": float(request.form.get("current_cgpa")),
-            "reason": request.form.get("reason"),
-            "status": "Pending"
+            "reason": request.form.get("reason")
         }
 
         od = OnDuty(**form_data)
         db.session.add(od)
         db.session.commit()
-        flash('OD submitted successfully!','success')
 
         student_id = session['user']
         student = Students.query.get(student_id)
