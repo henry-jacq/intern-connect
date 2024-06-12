@@ -30,8 +30,8 @@ def generate_reports():
     active_internships = db.session.query(Internship).filter_by(internship_status='Active').count()
     completed_internships = db.session.query(Internship).filter_by(internship_status='Completed').count()
     
-    online_internships = db.session.query(Internship).filter_by(internship_mode='Online').count()
-    offline_internships = db.session.query(Internship).filter_by(internship_mode='Offline').count()
+    online_internships = db.session.query(Internship).filter_by(internship_mode='Physical').count()
+    offline_internships = db.session.query(Internship).filter_by(internship_mode='Virtual').count()
     hybrid_internships = db.session.query(Internship).filter_by(internship_mode='Hybrid').count()
     
     paid_internships = db.session.query(Internship).filter(Internship.stipend_amount.isnot(None)).count()
@@ -40,15 +40,6 @@ def generate_reports():
     pending_requests = db.session.query(OdRequest).filter_by(status='Pending').count()
     accepted_requests = db.session.query(OdRequest).filter_by(status='Accepted').count()
     rejected_requests = db.session.query(OdRequest).filter_by(status='Rejected').count()
-
-    department_counts = db.session.query(Students.department, db.func.count(Students.id)).group_by(Students.department).all()
-    departments, department_counts = zip(*department_counts)
-    
-    batch_counts = db.session.query(Students.batch, db.func.count(Students.id)).group_by(Students.batch).all()
-    batches, batch_counts = zip(*batch_counts)
-
-    org_counts = db.session.query(Internship.org_name, db.func.count(Internship.id)).group_by(Internship.org_name).all()
-    organizations, org_counts = zip(*org_counts)
     
     
     return render_template('admin/reports.html', 
@@ -62,14 +53,7 @@ def generate_reports():
         unpaid_internships=unpaid_internships,
         pending_requests=pending_requests,
         accepted_requests=accepted_requests,
-        rejected_requests=rejected_requests,
-        departments=departments,
-        department_counts=department_counts,
-        batches=batches,
-        batch_counts=batch_counts,
-        organizations=organizations,
-        org_counts=org_counts,
-        
+        rejected_requests=rejected_requests        
     )
 
 
