@@ -83,13 +83,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        fetch('/api/od_requests')
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/faculty/api/od_requests', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            })
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 renderTable(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-    
+
+
         function renderTable(data) {
             const table = document.getElementById('approvalsTable');
             table.innerHTML = '';
@@ -102,16 +113,16 @@
                 const statusCell = row.insertCell(3);
                 statusCell.textContent = approval.status.charAt(0).toUpperCase() + approval.status.slice(1);
                 statusCell.classList.add(`status-${approval.status}`);
-    
+
                 const actionsCell = row.insertCell(4);
-                if (approval.status === 'pending') {
+                if (approval.status.toLowerCase() === 'pending') {
                     const approveButton = document.createElement('button');
-                    approveButton.className = 'btn btn-success me-2';
+                    approveButton.className = 'btn btn-sm btn-success me-2';
                     approveButton.textContent = 'Approve';
                     approveButton.onclick = () => handleApproval(approval.id, 'approve');
                     
                     const rejectButton = document.createElement('button');
-                    rejectButton.className = 'btn btn-danger';
+                    rejectButton.className = 'btn btn-sm btn-danger';
                     rejectButton.textContent = 'Reject';
                     rejectButton.onclick = () => handleApproval(approval.id, 'reject');
                     
@@ -120,9 +131,9 @@
                 }
             });
         }
-    
+
         function handleApproval(requestId, action) {
-            fetch(`/api/${action}_od_request/${requestId}`, {
+            fetch(`/faculty/api/${action}_od_request/${requestId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,32 +142,54 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    fetch('/api/od_requests')
-                        .then(response => response.json())
-                        .then(data => {
-                            renderTable(data);
-                        });
+                    fetch('/faculty/api/od_requests', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        renderTable(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
                 } else {
                     alert('Error processing request: ' + data.message);
                 }
             });
         }
-    
+
         function filterTable() {
-            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const searchTerm = document.getElementById('search').value;
             const statusFilter = document.getElementById('statusFilter').value;
-            fetch('/api/od_requests')
-                .then(response => response.json())
-                .then(data => {
-                    const filteredData = data.filter(approval => {
-                        const matchesSearch = approval.student_name.toLowerCase().includes(searchTerm) || approval.internship_title.toLowerCase().includes(searchTerm);
-                        const matchesStatus = statusFilter === 'all' || approval.status === statusFilter;
-                        return matchesSearch && matchesStatus;
-                    });
-                    renderTable(filteredData);
-                });
+
+            // Prepare the data to be sent in the body of the POST request
+            const requestBody = {
+                searchTerm: searchTerm,
+                status: statusFilter
+            };
+
+            // Fetch data from the backend with the POST request
+            fetch('/faculty/api/od_requests', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // renderTable(data); // Directly use the filtered data from backend
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
         }
-    
+
         function sortTable(columnIndex) {
             const table = document.getElementById('approvalsTable');
             const rows = Array.from(table.rows);
@@ -168,11 +201,10 @@
             table.innerHTML = '';
             sortedRows.forEach(row => table.appendChild(row));
         }
-    
+
         document.getElementById('search').addEventListener('input', filterTable);
         document.getElementById('statusFilter').addEventListener('change', filterTable);
-    });
-    
+        });
     </script>
     
 </body>

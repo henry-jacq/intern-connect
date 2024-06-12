@@ -72,7 +72,7 @@
                         <td>{{ od_application['start_date'] }}</td>
                         <td>{{ od_application['end_date'] }}</td>
                         <td>{{ od_application['current_cgpa'] }}</td>
-                        <td><span class="badge text-bg-secondary">{{ od_application['status']|capitalize }}</span></td>
+                        <td><span class="badge {% if od_application['status']|capitalize == 'Approved' %}text-bg-success {% elif od_application['status']|capitalize == 'Rejected' %}text-bg-danger{% else %}text-bg-secondary{% endif %}">{{ od_application['status']|capitalize }}</span></td>
                     </tr>
                     {% endfor %}
                 </tbody>

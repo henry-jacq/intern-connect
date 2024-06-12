@@ -38,7 +38,6 @@ def add_students():
                 faculty.students.append(student)
         db.session.commit()
         flash('Students added successfully!', 'success')
-        return redirect(url_for('faculty.home'))
     students = Students.query.all()
     return render_template("faculty/add_students.html", faculty=faculty, students=students)
 
@@ -60,8 +59,6 @@ def view_students():
     return render_template('faculty/students.html', students=students)
 
 
-
-
 @faculty.route('/od_requests', methods=['GET'])
 def od_requests_page():
     if 'user' not in session:
@@ -80,32 +77,43 @@ def od_requests_page():
     return render_template('faculty/od_requests.html', requests=requests)
 
 
-@faculty.route('/api/od_requests', methods=['GET', 'POST'])
+@faculty.route('/api/od_requests', methods=['POST'])
 def get_od_requests():
     if 'user' not in session:
         return jsonify({'success': False, 'message': 'Unauthorized'}), 401
 
     faculty_id = session['user']
     
+    # Fetch all requests for this faculty member
     requests = (db.session.query(OdRequest)
                 .join(OnDuty, OnDuty.id == OdRequest.on_duty_id)
                 .join(Students, Students.id == OnDuty.student_id)
                 .join(faculty_students, faculty_students.c.students_id == Students.id)
-                .filter(faculty_students.c.faculty_id == faculty_id)
-                .all())
-                
-    od_requests = [
-        {
-            'id': req.id,
-            'student_name': req.on_duty.student.name,
-            'internship_title': req.on_duty.internship.org_name,
-            'company': req.on_duty.internship.org_address,
-            'status': req.status
-        }
-        for req in requests
-    ]
+                .filter(faculty_students.c.faculty_id == faculty_id).all())
+
+    # Extract the search term and status from the request body if it's a POST request
+    if request.method == 'POST':
+        data = request.get_json()
+        search_term = data.get('searchTerm', '')
+        status_filter = data.get('status', 'all')
+
+        # Filter the requests
+        filtered_requests = [
+            {
+                'id': req.id,
+                'student_name': req.on_duty.student.name,
+                'internship_title': req.on_duty.internship.org_name,
+                'company': req.on_duty.internship.org_name,
+                'status': req.status
+            }
+            for req in requests
+            if (search_term in req.on_duty.student.name.lower() or
+                search_term in req.on_duty.internship.org_name.lower()) and
+               (status_filter == 'all' or req.status.lower() == status_filter.lower()) and
+               (req.faculty_id == session['user'])
+        ]
     
-    return jsonify(od_requests)
+    return jsonify(filtered_requests)
 
 @faculty.route('/api/approve_od_request/<int:request_id>', methods=['POST'])
 def approve_od_request(request_id):
@@ -114,10 +122,10 @@ def approve_od_request(request_id):
 
     request = OdRequest.query.get(request_id)
     if request:
-        request.status = 'approved'
-        db.session.commit()
+        request.status = 'Approved'
         check_and_update_on_duty_status(request.on_duty_id)
-        return jsonify({'success': True})
+        # db.session.commit()
+        return jsonify({'success': True, 'status': 'Approved'}), 200
     
     return jsonify({'success': False, 'message': 'Request not found'}), 404
 
@@ -127,24 +135,28 @@ def reject_od_request(request_id):
         return jsonify({'success': False, 'message': 'Unauthorized'}), 401
 
     request = OdRequest.query.get(request_id)
+    
     if request:
-        request.status = 'rejected'
-        db.session.commit()
+        request.status = 'Rejected'
         check_and_update_on_duty_status(request.on_duty_id)
-        return jsonify({'success': True})
+        # db.session.commit()
+        return jsonify({'success': True, 'status': 'Rejected'}), 200
     
     return jsonify({'success': False, 'message': 'Request not found'}), 404
 
 def check_and_update_on_duty_status(on_duty_id):
     on_duty = OnDuty.query.get(on_duty_id)
     od_requests = OdRequest.query.filter_by(on_duty_id=on_duty_id).all()
-    if all(req.status == 'approved' for req in od_requests):
-        on_duty.status = 'accepted'
+    for req in od_requests:
+        print(f"From check and update on_duty {req.status}")
+
+    if all(req.status.lower() == 'approved' for req in od_requests):
+        on_duty.status = 'Approved'
+    elif all(req.status.lower() == 'rejected' for req in od_requests):
+        on_duty.status = 'Rejected'
     else:
-        on_duty.status = 'pending'
+        on_duty.status = 'Pending'
     db.session.commit()
-
-
 
 @faculty.route('/profile', methods=['GET'])
 def faculty_profile():

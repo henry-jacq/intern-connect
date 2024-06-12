@@ -51,6 +51,18 @@
         </div>
         <h3 class="fw-normal fs-4 mt-4">Add Student Under Your Mentorship</h3>
         <hr class="m-0">
+
+        {% with messages = get_flashed_messages('success') %}
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="alert alert-{{message[0]}} alert-dismissible my-3 fade show" role="alert">
+                        <i class="bi bi-check2-circle me-2"></i>
+                        {{message[1]}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {%endfor%}
+            {% endif %}
+        {% endwith %}
     
     <div class="my-3">
         <form method="POST" action="{{ url_for('faculty.add_students') }}">
@@ -68,7 +80,11 @@
                     <tbody>
                         {% for student in students %}
                         <tr>
-                            <td><input type="checkbox" name="students" value="{{ student.id }}"></td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="students" value="{{ student.id }}" id="flexCheckDefault">
+                                </div>
+                            </td>
                             <td>{{ student.digital_id }}</td>
                             <td>{{ student.name }}</td>
                             <td>{{ student.reg_no }}</td>
