@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash,jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import Announcements, Faculty,OdRequest,OnDuty,Internship
-from .extensions import get_role_id
+from .extensions import get_role_id, get_uploads
 from .models import db, Students, Faculty, faculty_students
 
 faculty = Blueprint('faculty', __name__)
@@ -102,9 +102,11 @@ def get_od_requests():
             {
                 'id': req.id,
                 'student_name': req.on_duty.student.name,
-                'internship_title': req.on_duty.internship.org_name,
+                'internship_title': req.on_duty.internship.nature_of_work,
                 'company': req.on_duty.internship.org_name,
-                'status': req.status
+                'status': req.status,
+                'offer_letter': req.on_duty.internship.offer_letter,
+                'completion_letter': req.on_duty.internship.completion_letter
             }
             for req in requests
             if (search_term in req.on_duty.student.name.lower() or
@@ -157,6 +159,10 @@ def check_and_update_on_duty_status(on_duty_id):
     else:
         on_duty.status = 'Pending'
     db.session.commit()
+
+@faculty.route('/uploads/<filename>', methods=['GET'])
+def get_uploaded_file(filename):
+    return get_uploads(filename)
 
 @faculty.route('/profile', methods=['GET'])
 def faculty_profile():
